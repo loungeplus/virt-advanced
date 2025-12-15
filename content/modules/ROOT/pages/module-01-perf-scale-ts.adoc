@@ -1,0 +1,390 @@
+= パフォーマンス、スケーラビリティ、そしてトラブルシューティング
+
+== はじめに
+
+私たちの旅は、毎年恒例の「Mega-Sale Monday」という大きな課題から始まります。現在、OpenShift Virtualization 上の VM ベースのサービスに部分的に移行済みの主力 e コマースウェブサイトは、かつてないほどのトラフィックの急増を見込んでいます。昨年は、予期せぬトラフィックの急増によりウェブサイトがクラッシュし、多大な売上損失と顧客の不満につながりました。今年は万全の対策を講じる一方で、昨年のような事態を繰り返さないためには、環境における予期せぬ問題を認識し、対処する必要があります。このモジュールでは、クラスタの高負荷シナリオを特定する方法、垂直方向と水平方向の両方でリソースをスケーリングすることでクラスタの負荷を軽減・修復する方法、そして将来のイベントに備えてクラスタのリソースバランスを調整する方法を学習します。
+
+
+== Red Hat OpenShift コンソールの認証情報
+
+OpenShift クラスターコンソールは {openshift_cluster_console_url}[こちら^] からご利用いただけます。
+
+* *User:* `{openshift_cluster_admin_username}`
+* *Password:* `{openshift_cluster_admin_password}`
+
+最初に認証プロバイダーを選択するように求めるページが表示されるので、*htpasswd_provider* をクリックします。
+
+image::module-01-perf-scale-ts/00-htpasswd_login.png[title="OpenShift Authentication", link=self, window=blank, width=100%]
+
+次に、認証情報をコピー/ペーストできるログイン画面が表示されます。
+
+image::module-01-perf-scale-ts/01-openshift_login.png[title="OpenShift Login", link=self, window=blank, width=100%]
+
+NOTE: 本コースでは、Webコンソールのメニューが英語表記となっています。メニューを英語表記にするために次のことを実施してください。Webコンソール画面右上のユーザ名をクリックして [ユーザー設定] のメニューを開きます。次に表示される画面で [言語] メニューを選択すると、「Use the default browser language setting.」のチェックボックスにチェックが入っています。このチェックボックスのチェックを外し、[言語の設定] のドロップダウンリストから、[English] を選択します。最後にブラウザで再読み込みすると、英語のWebコンソールが表示されます。
+
+[[alerts_graphs_logs]]
+== アラート、グラフ、ログの有効化と調査
+
+管理者にとって非常に重要なタスクの一つは、クラスターのパフォーマンスを評価することです。これらのパフォーマンスメトリックは、ノード自体、またはクラスター内で実行されているワークロードから収集できます。OpenShiftには、アラートの生成、ログの集約、そして管理者がクラスターのパフォーマンスを視覚化するのに役立つグラフの作成を支援するツールが多数組み込まれています。
+
+
+
+=== ノードアラートとグラフ
+
+まず、クラスターを構成するノードのメトリクスを確認しましょう。
+
+. 左側のナビゲーションメニューで  *Compute* をクリックし、*Nodes* をクリックします。
+. *Nodes* ページでは、クラスター内の各ノードのステータス、ロール、現在ホストしているポッドの数、メモリやCPU使用率などの物理属性を確認できます。
+
++
+image::module-01-perf-scale-ts/02-node_list.png[title="Nodes", link=self, window=blank, width=100%]
++
+. クラスター内のワーカーノード 5 をクリックします。*Node details* ページが開き、ノードの詳細情報を確認できます。
+. このページでは、画面上部の中央にノードによって生成されたアラートが表示され、画面下部の中央に CPU、メモリ、ストレージ、ネットワークスループットのグラフが表示され、ノードの使用状況を視覚的に把握できます。
+. 使用率パネルの右上にあるドロップダウンをクリックすると、これらのグラフの表示期間を 1 時間、6 時間、または 24 時間に変更できます。
++
+image::module-01-perf-scale-ts/03-node_example.png[title="Node Details", link=self, window=blank, width=100%]
++
+. いずれかのグラフをクリックすると、より詳細なバージョンと、その情報を表示するために実行されているクエリを確認できます。CPUメトリックのグラフをクリックして、今すぐお試しください。
++
+image::module-01-perf-scale-ts/03a-node_metrics.png[title="Node Metrics", link=self, window=blank, width=100%]
+
+=== 仮想マシングラフ
+
+物理クラスタリソース以外にも、仮想マシンなどのアプリケーションやワークロードで何が起こっているかを可視化できることは非常に重要です。これらについてどのような情報が得られるか見ていきましょう。
+
+NOTE: ラボのこの部分では、アプリケーションを使用して一部の仮想マシンに追加の負荷を生成し、グラフがどのように生成されるかを確認します。
+
+. 左側のナビゲーションメニューで *Workloads* をクリックし、*Deployments* をクリックします。
+. プロジェクト *webapp-vms* にいることを確認します。
+. *loadmaker* というポッドが1つデプロイされているはずです。
++
+image::module-01-perf-scale-ts/04-select_loadmaker.png[title="Loadmaker Deployment", link=self, window=blank, width=100%]
++
+*loadmaker* をクリックすると、*Deployment details* ページが表示されます。
++
+image::module-01-perf-scale-ts/05-deploy_details.png[title="Deployment Details", link=self, window=blank, width=100%]
++
+. *Environment* をクリックすると、*REQUESTS_PER_SECOND* のフィールドが表示されます。フィールドの値を `75` に変更し、下部にある *Save* ボタンをクリックします。
++
+image::module-01-perf-scale-ts/06-lm_pod_config.png[title="LM Pod Config", link=self, window=blank, width=100%]
++
+. では、負荷をかけているVMを確認してみましょう。
+. 左側のナビゲーションメニューで *Virtualization* をクリックし、次に *VirtualMachines* をクリックします。中央の列で *webapp-vms* プロジェクトを選択します。*winweb01*、*winweb02*、*database* の3つの仮想マシンが表示されます。
++
+image::module-01-perf-scale-ts/07-webapp_vms.png[title="WebApp VMs", link=self, window=blank, width=100%]
++
+IMPORTANT: この時点では、ラボでは *database* と *winweb01* のみが電源オンになっているはずです。もしオフになっている場合は、今すぐ電源オンにしてください。*winweb02* は今のところ電源オンにしないでください。
++
+. 仮想マシンが起動したら、*winweb01* をクリックします。すると*VirtualMachine details* ページが表示されます。
+. このページには *Utilization* セクションがあり、以下の情報が表示されます。
+
+  * 15 秒ごとに更新される VM リソース (CPU、メモリ、ストレージ、ネットワーク転送) の基本ステータス。
+  * 最近の期間の VM パフォーマンスの詳細を示す小さなグラフがいくつかあり、デフォルトでは過去 5 分間ですが、ドロップダウン メニューから最大 1 週間までの値を選択できます。
++
+image::module-01-perf-scale-ts/08-vm_details.png[title="VM Details", link=self, window=blank, width=100%]
++
+. *Network Transfer* を詳しく見てみると、*Breakdown by network* をクリックすると、仮想マシンに割り当てられた各ネットワークアダプタを通過するネットワークトラフィックの量を確認できます。この場合は、1つの *default*  ネットワークアダプタです。
++
+image::module-01-perf-scale-ts/09-select_network.png[title="Select Network", link=self, window=blank, width=100%]
++
+. ネットワーク アダプターの確認が完了したら、CPU 使用率を示すグラフをクリックします。
++
+image::module-01-perf-scale-ts/10-select_cpu.png[title="Select CPU", link=self, window=blank, width=100%]
++
+. これにより *Metrics* ウィンドウが開き、CPU使用率のより詳細な情報を確認できます。デフォルトでは30分に設定されており、負荷ジェネレーターを起動してからのCPU使用率の急上昇が確認できます。より詳細な情報が必要な場合は、ドロップダウンをクリックして1時間に変更することもできます。
++
+image::module-01-perf-scale-ts/11-cpu_metrics.png[title="CPU Metrics", link=self, window=blank, width=100%]
++
+. 右上隅で更新タイミングを変更することもできます。
++
+image::module-01-perf-scale-ts/12-change_refresh.png[title="Change Refresh Interval", link=self, window=blank, width=100%]
++
+. このグラフを生成するために VM に対して実行されているクエリを確認したり、*Add Query* ボタンを使用して独自のクエリを作成したりすることもできます。
++
+image::module-01-perf-scale-ts/13-add_query.png[title="Add_Query", link=self, window=blank, width=100%]
++
+. 練習として、IO/待機ステータスで費やされたvCPU時間を表示するカスタムクエリを追加してみましょう。
+. *Add Query* ボタンをクリックし、表示される新しい行に次のクエリを貼り付けます。
++
+[source,sh,role=execute]
+----
+sum(rate(kubevirt_vmi_vcpu_wait_seconds_total{name='winweb01',namespace='webapp-vms'}[5m])) BY (name, namespace)
+----
++
+. *Run queries* ボタンをクリックして、グラフがどのように更新されるか確認してください。グラフの下部に新しい折れ線グラフが表示され、マシンの起動以来、深刻な負荷がかかっていない状況が一度もなかったことがわかります。負荷ジェネレーターは意図したとおりに動作し、VMに最大限の負荷をかけています。
++
+image::module-01-perf-scale-ts/14-example_query.png[title="Sample Custom Query", link=self, window=blank, width=100%]
+
+=== ダッシュボードの確認
+
+OpenShift のもう一つの強力な機能は、*Cluster Observability Operator* を使用してクラスターのパフォーマンスに関する詳細なダッシュボードを表示できることです。それでは、いくつか確認してみましょう。
+
+. 左側のナビゲーションメニューから *Observe* をクリックし、*Dashboards* をクリックします。
++
+image::module-01-perf-scale-ts/19-dashboards.png[title="Dashboards", link=self, window=blank, width=100%]
++
+. *API Performance* をクリックし、*KubeVirt/Infrastructure Resources/Top Consumers* を検索します。
++
+image::module-01-perf-scale-ts/20-kubevirt_dashboard.png[title="KubeVirt Dashboard", link=self, window=blank, width=100%]
++
+. このダッシュボードには、クラスター上で実行されているすべての仮想マシンのCPU使用量上位が表示されます。*Top Consumers of CPU by virt-launcher Pods* パネルを確認し、右上隅の *Inspect* リンクをクリックしてください。
++
+image::module-01-perf-scale-ts/21-cpu_inspect.png[title="CPU Inspect", link=self, window=blank, width=100%]
++
+. グラフに表示するVMを選択するには、表示されている各VMの横にあるチェックボックスをオンにします。winweb01のCPU使用率が着実に上昇しているのがわかるはずです。
+. 今度は、いくつかの線をオフにして試してみてください。オフにすると、対応する色付きの線がグラフから消えます。
++
+image::module-01-perf-scale-ts/22-metrics_select.png[title="Select Metrics", link=self, window=blank, width=100%]
+
+このセクションでは、ノードとワークロードに関するアラート、パフォーマンス メトリック、グラフを見つけて表示する方法を説明しました。今後はこれらのスキルを活用して、独自の OpenShift Virtualization 環境のトラブルシューティングを行うことができます。
+
+[[vm_resource_util]]
+== 仮想マシンのリソース使用率のトラブルシューティング
+
+winweb01、winweb02、およびデータベースサーバーは連携して、2つのWebサーバー間でWebリクエストを負荷分散し、負荷を軽減してパフォーマンスを向上させるシンプルなWebベースアプリケーションを提供します。現在稼働しているのは1つのWebサーバーのみで、前述のとおり、現在そのサーバーへの負荷が非常に高くなっています。このラボセクションでは、Webサーバーの水平スケーリングによってVMの負荷を軽減する方法と、OpenShift Virtualizationにネイティブで搭載されているメトリクスとグラフを使用してこれを診断する方法を確認します。
+
+. 左側のメニューで *Virtualization* をクリックし、*VirtualMachines* をクリックします。
+. 次に、現在実行中の *winweb01* をクリックします。すると、*VirtualMachine details* ページが表示されます。
++
+image::module-01-perf-scale-ts/23-vm_details.png[title="VM Details", link=self, window=blank, width=100%]
++
+. *metrics* タブをクリックして、CPU 使用率のグラフを簡単に確認すると、最大値になっているはずです。
++
+image::module-01-perf-scale-ts/24-vm_metrics.png[title="VM Metrics", link=self, window=blank, width=100%]
++
+. CPUグラフ自体をクリックすると、拡大版が表示されます。サーバーの負荷が1.0（CPU使用率100%）をはるかに上回っていることがわかります。これは、Webサーバーが現在深刻な過負荷状態にあることを意味します。
++
+image::module-01-perf-scale-ts/25-cpu_util_load.png[title="CPU Utilization and Load", link=self, window=blank, width=100%]
+
+[[horz_scale_vm]]
+== VMリソースの水平スケーリング
+. 左側のナビゲーションメニューで *VirtualMachines* をクリックして仮想マシンのリストに戻り、*winweb02* 仮想マシンをクリックします。仮想マシンはまだ *Stopped* 状態です。右上隅の *Play* ボタンを使用して仮想マシンを起動します。
++
+image::module-01-perf-scale-ts/26-power_on.png[title="Power On Winweb02", link=self, window=blank, width=100%]
++
+. 仮想マシン *winweb01* の *Metrics* タブに戻り、*CPU* グラフをもう一度クリックします。負荷が徐々に低下し始めているのがわかるはずです。
++
+image::module-01-perf-scale-ts/27-load_reducing.png[title="Load Reducing", link=self, window=blank, width=100%]
++
+. *Add query* ボタンをクリックし、次の構文を貼り付けて、*winweb02* の負荷も同時にグラフ化するクエリを追加します。
++
+[source,sh,role=execute]
+----
+sum(rate(kubevirt_vmi_cpu_usage_seconds_total{name='winweb02',namespace='webapp-vms'}[5m])) BY (name, namespace)
+----
++
+. *Run queries* ボタンをクリックし、表示される更新されたグラフを調べます。
++
+image::module-01-perf-scale-ts/28-load_sharing.png[title="Load Sharing", link=self, window=blank, width=100%]
+
+グラフを見ると、*winweb02* が導入され、*winweb01* が元々単独で抱えていた負荷の大部分を担っていることがわかります。数分後、2つの仮想マシンがWebリクエストを分散させるため、負荷は平準化されました。
+
+[[vert_scale_vm]]
+== VMリソースの垂直スケーリング
+
+5分間隔でVMの負荷が均等化されているにもかかわらず、VMの負荷はまだかなり高い状態にあることがわかります。これ以上水平スケーリングができないため、残された唯一の選択肢は、VMにCPUとメモリリソースを追加して垂直スケーリングすることです。幸いなことに、前のモジュールで説明したように、これらのリソースをホットプラグすることで、現在実行中のワークロードに影響を与えることなく、垂直スケーリングを行うことができます。
+
+. まず、前のセクションのメトリクスページのグラフを確認してください。左上のドロップダウンから、更新間隔を過去5分に設定できます。2つの仮想ゲストの負荷が1.0付近で安定していることに注目してください。これは、両方のゲストが依然としてかなり過負荷状態にあることを示しています。
++
+image::module-01-perf-scale-ts/29-balanced_load.png[title="Balanced Load", link=self, window=blank, width=100%]
++
+. 左側のナビゲーション メニューで *VirtualMachines* をクリックして仮想マシン リストに戻り、*winweb01* をクリックします。
++
+image::module-01-perf-scale-ts/30-select_vm.png[title="Select VM", link=self, window=blank, width=100%]
++
+. VM の *Configuration* タブをクリックし、*VirtualMachine details* の下にある *CPU|Memory* のセクションを見つけて、鉛筆アイコンをクリックして編集します。
++
+image::module-01-perf-scale-ts/31-edit_vm.png[title="Edit VM", link=self, window=blank, width=100%]
++
+. vCPU を *4* に増やし、*Save* ボタンをクリックします。
++
+image::module-01-perf-scale-ts/32-update_specs.png[title="Update Specs", link=self, window=blank, width=100%]
++
+. *Overview* タブに戻ってクリックします。詳細画面のCPU | Memoryセクションが新しい値に更新され、利用可能なリソースが増えたことでゲストのCPU使用率が徐々に急速に低下していることがわかります。
++
+[NOTE]
+====
+要求した追加の vCPU は、現在 VM がデプロイされている OpenShift ノードでは利用できない可能性があります。
+十分な vCPU リソースを持つ別のノードに VM が自動的に移行されることがあります。
+====
++
+image::module-01-perf-scale-ts/33-vm_new_spec.png[title="New VM Spec", link=self, window=blank, width=100%]
++
+. *winweb02* でも同じ手順を繰り返します。
+. 両方の仮想マシンがアップグレードされたら、*webapp-vms* プロジェクトをクリックします。CPU 使用率が大幅に低下していることがわかります。
++
+image::module-01-perf-scale-ts/34-updated_usage.png[title="Updated Utilization", link=self, window=blank, width=100%]
++
+. *winweb01* をクリックし、*Metrics* タブの *CPU* グラフをクリックして、使用率グラフがどのようになっているかを確認します。また、*winweb02* からのクエリを再度追加すると、各ゲストのリソースが増加した後、両方のグラフが急速に低下し、各 VM の負荷が以前よりも大幅に軽減されていることがわかります。
++
+NOTE: 実際の値がグラフに反映されるまでには時間がかかる場合があります。
++
+image::module-01-perf-scale-ts/35-updated_usage_verify.png[title="Verify Metrics", link=self, window=blank, width=100%]
+
+[[swap_mem]]
+== Swap/Memory オーバーコミットについて
+
+NOTE: このラボのセクションでは、物理クラスターリソースが不足している状況で何ができるかについて解説します。*以下の情報をお読みください。*
+
+物理リソースを使い果たしているため、特定のワークロードに対してCPUやメモリリソースを増やすことができない場合があります。OpenShiftのCPUオーバーコミット率はデフォルトで10:1ですが、Kubernetes環境におけるメモリは多くの場合有限のリソースです。
+
+通常のKubernetesクラスターでは、ワークロードリソースの使用率が高いためにメモリ不足に陥ると、ポッドを無差別に強制終了し始めます。コンテナベースのアプリケーション環境では、通常、ロードバランサーサービスの背後にアプリケーションのレプリカを複数配置することで、この問題を軽減できます。アプリケーションは他のレプリカによって引き続き利用可能であり、強制終了されたポッドは空きリソースのあるノードに再割り当てされるため、エンドユーザーにとってアプリケーションのパフォーマンスに目立った影響は通常発生しません。
+
+これは、多くの場合多くのレプリカで構成されておらず、永続的に利用可能であることが求められる仮想マシンのワークロードには適していません。
+
+クラスタ内の物理リソースを使い果たした場合、従来の選択肢としてはクラスタをスケールすることが挙げられますが、多くの場合、これは言うは易く行うは難しです。スケールアウト用の予備の物理ノードがスタンバイしておらず、新しいハードウェアを注文しなければならない場合、調達手続きやサプライチェーンの混乱によって遅延が生じる可能性があります。
+
+この問題の回避策の一つは、新しいハードウェアが到着するまでの時間を稼ぐために、ノードで一時的にスワップ/メモリオーバーコミットを有効にすることです。これにより、ワーカーノードはスワップを行い、ハードディスク領域を使用してアプリケーションメモリに書き込みを行うことができます。ハードディスクへの書き込みはシステムメモリへの書き込みよりもはるかに遅く、理想的なシナリオではありませんが、緊急時にはこれを有効にすることができ、追加のリソースが到着して利用可能になるまでワークロードを保持することができます。
+
+[[cluster_scale]]
+== ノードを追加してクラスターをスケーリングします。
+
+OpenShift クラスターでは、物理リソースが不足した場合の主な解決策は、ワーカーノードを追加してクラスターをスケールすることです。これにより、失敗しているワークロードや割り当てられないワークロードを正常に割り当てできるようになります。ラボのこのセクションでは、この考え方に焦点を当て、クラスターに過負荷をかけた後、新しいノードを追加してすべての VM が正常に実行できるようにします。
+
+注: このラボ環境では、実際に物理ノードを追加するのではなく、VM ワークロードを許可しないテイントを付与したスタンバイ状態のノードを用意することで、動作をシミュレートしています。適切なタイミングでこのテイントを削除し、クラスターへの新しいノードの追加をシミュレートします。
+
+. 左側のナビゲーション メニューで、*Virtualization* をクリックし、次に *VirtualMachines* をクリックします。
+. *vms-aap-day2* プロジェクトと *webapp-vms* プロジェクト内のすべての VM がパワーオンになっていることを確認します。
++
+image::module-01-perf-scale-ts/36-verify_oc.png[title="Verify Running VMs", link=self, window=blank, width=100%]
++
+. *mass-vm* プロジェクトをクリックすると、そこに表示されている仮想マシンの一覧が表示されます。ドロップダウンメニューの *1 - 15 of 36* をクリックし、*50 per page* に変更すると、すべての仮想マシンが表示されます。
++
+image::module-01-perf-scale-ts/37-project_mass.png[title="Mass VMs Project", link=self, window=blank, width=100%]
++
+. プロジェクト内のすべてのVMを選択するには、*Filter* ドロップダウンのチェックボックスをクリックします。*Actions* ボタンをクリックし、ドロップダウンメニューから *Start* を選択します。
++
+image::module-01-perf-scale-ts/38-select_all_start.png[title="Start All VMs", link=self, window=blank, width=100%]
++
+. すべての VM の電源をオンにしようとすると、現在エラー状態にある VM が約 5 ～ 7 台あるはずです。
++
+image::module-01-perf-scale-ts/39-after_start.png[title="VMs After Startup", link=self, window=blank, width=100%]
++
+. エラーの数をクリックすると、エラー状態の説明が表示されます。
++
+image::module-01-perf-scale-ts/40-num_errors.png[title="Error Details", link=self, window=blank, width=100%]
++
+. これらの各 VM のステータス列には *ErrorUnschedulable* と表示されます。これは、クラスターにスケジュール設定するためのリソースが不足しているためです。
+. 左側のナビゲーションメニューで、*Compute* をクリックし、*Nodes* をクリックします。3つのワーカーノード（ノード3～5）には多数のポッドが割り当てられており、メモリ使用量も大きいのに対し、ワーカーノード6と7はメモリ使用量が比較的少ないことがわかります。
++
+image::module-01-perf-scale-ts/41-worker_nodes.png[title="Nodes", link=self, window=blank, width=100%]
++
+NOTE: OpenShift環境では、利用可能なメモリは各ポッドから送信されたメモリ要求に基づいて計算されます。これにより、ポッドがその時点で必要なメモリ量を使用していない場合でも、ポッドに必要なメモリが確保されます。そのため、これらのワーカーノードは、実際には約75%の使用率しか表示されていないにもかかわらず、「満杯」とみなされます。
++
+. ワーカーノード3をクリックすると、*Node details* ページが表示されます。ノードで利用可能なリソースが限られているという警告が表示されています。また、ノードのメモリ使用率のグラフも確認できます。使用メモリ量は青色で、要求量はオレンジ色の破線で表示されます。
++
+image::module-01-perf-scale-ts/42-worker_node_3.png[title="Worker Node 3 Details", link=self, window=blank, width=100%]
++
+. 上部の *Pods* タブをクリックし、検索バーに `virt-launcher` と入力して、ノード上の VM を検索します。
++
+image::module-01-perf-scale-ts/43-vms_on_node_3.png[title="VMs On Worker Node 3", link=self, window=blank, width=100%]
++
+. 次に、左側のナビゲーションメニューで *Nodes* をクリックし、ワーカーノード6をクリックすると *Node details* ページが表示されます。現在、このノードにはCPUやメモリに関する警告が表示されていないことに注意してください。
++
+image::module-01-perf-scale-ts/44-worker_node_6.png[title="Worker Node 6 Details", link=self, window=blank, width=100%]
++
+. 上部の *Pods* タブをクリックし、検索バーに `virt-launcher` と入力してノード上のVMを検索します。現在、VMは存在しないことに注意してください。
++
+image::module-01-perf-scale-ts/45-vms_on_node_6.png[title="VMs On Worker Node 6", link=self, window=blank, width=100%]
++
+. *Details* タブをクリックし、Taintsが 1 つ定義されている *Taints* セクションが表示されるまで下にスクロールします。
++
+image::module-01-perf-scale-ts/46-node_details.png[title="Node Details", link=self, window=blank, width=100%]
++
+image::module-01-perf-scale-ts/47-select_taints.png[title="Select Taints", link=self, window=blank, width=100%]
++
+. *鉛筆* アイコンをクリックすると、ノードの現在の *Taint* を編集するためのボックスが表示されます。ボックスが表示されたら、Taint定義の横にある *-* をクリックして削除し、*Save* ボタンをクリックします。
++
+image::module-01-perf-scale-ts/48-remove_taint.png[title="Remove Taint", link=self, window=blank, width=100%]
++
+. taintが削除されたら、一番上までスクロールして再度 *Pods* タブをクリックし、検索バーにもう一度 `virt-launcher` と入力すると、スケジュール不可能な VM がこのノードに割り当てられていることがわかります。
++
+image::module-01-perf-scale-ts/49-vms_node6_untainted.png[title="VMs On Worker Node 6", link=self, window=blank, width=100%]
++
+. *Virtualization* をクリックし、左側のナビゲーション メニューで *VirtualMachines* をクリックして、*mass-vms* プロジェクトの VM のリストに戻り、現在実行中のすべての VM を表示します。
++
+image::module-01-perf-scale-ts/50-mass_vms_running.png[title="Mass VMs Running", link=self, window=blank, width=100%]
+
+[[load_aware]]
+== Load-aware rebalancing
+
+物理ノードを追加することで、すべての仮想ゲストのスケジュールを正しく調整できましたが、クラスタ全体のノード使用率がわずかに不均衡になることがよくあります。
+
+*Filter* ドロップダウンメニューをクリックし、各ワーカーノード上の仮想マシンの配置が表示されるまでスクロールすることで、簡単に確認できます。
+
+image::module-01-perf-scale-ts/51-vms_on_nodes.png[title="VMs On Nodes", link=self, window=blank, width=100%]
+
+この問題を解決するために、OpenShift Virtualization で活用できるもう 1 つの機能は、Kube Descheduler オペレーターを使用して、利用可能なワーカーノード間で仮想化ワークロードを再分散することです。
+
+このセクションでは、クラスターがオーバープロビジョニングされることなく、アイドル状態のノードをもう 1 つ導入することで、OpenShift の負荷認識型再分散機能について説明します。また、仮想マシンに負荷をかけることで、クラスターが自動的にワークロードを再分散するようにします。
+
+NOTE: このクラスターでは Load-aware rebalancing がすでに設定されていますが、これは機能が実際にどのように動作するかを確認するための単なる演習です。
+
+=== ノードのCPU使用率を上げる
+
+このセクションでは、負荷生成アプリケーションを再度使用しますが、mass-vms プロジェクトには多数の負荷生成アプリケーションがデプロイされているため、いくつかの CLI コマンドを実行してデプロイメントをスケーリングし、クラスターに負荷をかけ、再バランス調整のステータスを確認します。
+
+. 始めるには、右上隅のアイコンをクリックしてOpenShiftウェブターミナルを起動してください。ウェブターミナルは画面下部に表示されます。
++
+image::module-01-perf-scale-ts/56-openshift_web_terminal.png[title="OpenShift Web Terminal", link=self, window=blank, width=100%]
++
+. 負荷ジェネレーターのインスタンスの数を増やしてクラスターに追加の負荷をかけるには、次の構文をターミナルに貼り付けます。
++
+[source,sh,role=execute]
+----
+for i in {1..12}; do oc scale deployment/loadmaker-$i --replicas=6 -n mass-vms; done
+----
++
+. これにより、mass-vms プロジェクト内の各仮想マシンと、それらをホストするノードにさらなる負荷がかかり始めるはずです。
+. ノードを追加してクラスター リソースを拡張すると、クラスターは仮想マシンのライブ マイグレーションによってリソースのバランスを取ろうとします。
++
+image::module-01-perf-scale-ts/57-scale_loadmaker.png[title="CLI Scale Deployment", link=self, window=blank, width=100%]
+
+=== クラスターにノードを追加する
+
+. 最初に行うべきステップは、前のセクションで行った手順を繰り返し、クラスター内のワーカーノード7からTaintを削除することです。これを行うには、*Compute* をクリックし、*Nodes* をクリックして、ワーカーノード7をクリックします。
++
+image::module-01-perf-scale-ts/52-compute_nodes_7.png[title="Compute Node List", link=self, window=blank, width=100%]
++
+. ワーカーノード 7 をクラスター内の仮想マシン ホストとして導入するには、以前と同じように *Details* タブをクリックします。
++
+image::module-01-perf-scale-ts/53-node_7_details.png[title="Node 7 Details", link=self, window=blank, width=100%]
++
+. *Labels* セクションまで下にスクロールすると、*Taints* セクションが表示されます。そこには1つのTaintがリストされており、その横に鉛筆アイコンがあります。*鉛筆* アイコンをクリックすると、ノードのTaintを編集できます。
++
+image::module-01-perf-scale-ts/54-node_7_taint.png[title="Node 7 Taint", link=self, window=blank, width=100%]
++
+. ポップアップウィンドウで、*minus* 記号をクリックしてtaintを削除し、*Save* ボタンをクリックします。
++
+image::module-01-perf-scale-ts/55-node_7_taint_window.png[title="Remove Taint Window", link=self, window=blank, width=100%]
++
+. 左側のメニューで *Virtualization* と *VirtualMachines* をクリックして仮想マシン ビューに戻り、*All projects* をクリックして、最後に *Filter* ドロップダウンをクリックします。
+. このビューの更新はリアルタイムで確認できます。1～2分でノード7が表示され、VMがノードにライブマイグレーションされてクラスターのバランスがとれるため、ゲスト数が増加し始めます。
++
+image::module-01-perf-scale-ts/58-vms_on_nodes_7.png[title="VMs On Node 7", link=self, window=blank, width=100%]
++
+NOTE: load-aware rebalacingのデフォルト構成では 5 分ごとに更新されますが、ラボでは、より短い期間で視覚化しやすいようにこの変数を 30 秒に調整しました。
+
++
+. OpenShift Web ターミナルで次のコマンドを実行して、すべてのNamespaceにわたるノード退避のステータスを確認することもできます。
++
+[source,sh,role=execute]
+----
+oc get vmim -A
+----
++
+NOTE: 上記のコマンドには長い履歴があり、このモジュール中にクラスターを複数回スケーリングしたため、VM の退避のビューがかなり表示される可能性があります。
++
+image::module-01-perf-scale-ts/59-kubevirt_evac.png[title="KubeVirt Evacuation List", link=self, window=blank, width=100%]
+
+IMPORTANT: ラボの残りの部分を問題なく完了させるには、負荷生成ポッドをスケールダウンし、環境に悪影響を与えないようにする必要があります。以下の構文でスケールダウンしてください。
+
+[source,sh,role=execute]
+----
+for i in {1..12}; do oc scale deployment/loadmaker-$i --replicas=0 -n mass-vms; done
+----
+
+== まとめ
+
+このモジュールでは、OpenShift Virtualization 管理者として高負荷シナリオをシミュレートし、仮想マシンリソースを水平方向および垂直方向にスケーリングすることで、この問題を解決しました。また、物理クラスターリソースが不足し、新しい仮想マシンをプロビジョニングできないという問題も解決しました。この問題を解決するには、クラスターをスケールアップしてリソースを追加することで解決しました。最後に、追加の負荷を生成し、拡張されたクラスター全体で仮想マシンが負荷に応じた負荷分散を実行する能力を観察することで、物理クラスターの限界をさらにテストできることを確認できました。
