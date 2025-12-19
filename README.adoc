@@ -1,15 +1,15 @@
 = Experience OpenShift Virtualization: Advanced Operations and Automation
 
-== Introduction
+== はじめに
 
-In today's dynamic IT landscape, organizations are grappling with the complexities of managing traditional virtualization alongside the demands of cloud-native innovation. This workshop allows IT professionals to confidently navigate this hybrid reality, demonstrating how Red Hat OpenShift Virtualization, coupled with Ansible Automation Platform and Red Hat Advanced Cluster Management for Kubernetes provides a unified, efficient, and secure platform for all workloads, whether virtual or container-based.
+今日のダイナミックなIT環境において、組織は従来の仮想化管理の複雑さとクラウドネイティブ・イノベーションの要求との両立に苦慮しています。このワークショップでは、Red Hat OpenShift VirtualizationとAnsible Automation Platform、そしてRed Hat Advanced Cluster Management for Kubernetesを組み合わせることで、仮想環境でもコンテナベースでも、あらゆるワークロードに対応する統合型、効率的、かつ安全なプラットフォームを実現する方法を示し、ITプロフェッショナルがこうしたハイブリッドな現実に自信を持って対応できるよう支援します。
 
-In this lab, which is a follow-up to our very popular https://www.redhat.com/en/events/na-red-hat-openshift-virtualization[Experience OpenShift Virtualization Roadshow^] lab, we intend to equip you with the knowledge and tools to manage your environment and perform critical operational tasks often required of virtual machine administrators from day-2 onward. This ensures that your virtualized workloads are efficiently managed and maintained long after the initial deployment.
+このラボは、大変ご好評いただいている https://www.redhat.com/en/events/na-red-hat-openshift-virtualization[Experience OpenShift Virtualization Roadshow^]ラボの続編です。導入後2日目以降、環境を管理し、仮想マシン管理者に求められる重要な運用タスクを実行するための知識とツールを習得していただきます。これにより、仮想化ワークロードを初期導入後も長期間にわたって効率的に管理・保守できるようになります。
 
 
-=== Version Information
+=== バージョン情報
 
-This edition of the lab has been developed using the following software versions:
+このラボは、以下のソフトウェアバージョンを使用して開発されました。
 
 * Red Hat OpenShift 4.18.23
 * Red Hat OpenShift Virtualization 4.18.13
