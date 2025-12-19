@@ -1,91 +1,94 @@
-= Security and Compliance
+697 / 5,000
+= セキュリティとコンプライアンス
 
-== Introduction
+== はじめに
 
-The Mega-Sale was a success, but now a critical security audit is looming. We need to demonstrate strict adherence to industry compliance standards for all our virtualized workloads. Our challenge is to ensure a unified approach to security across both VMs and containers. In this module we will be tasked with scanning our infrastructure with the OpenShift Compliance Operator and remediating any reported vulnerabilities to ensure that our cluster meets our strict security standards. We will also configure distinct user accounts and access roles to be used by the security auditors that only need limited access to our virtualization infrastructure.
+Mega-Saleは成功しましたが、重要なセキュリティ監査が迫っています。すべての仮想化ワークロードにおいて、業界のコンプライアンス標準を厳格に遵守していることを証明する必要があります。私たちの課題は、VMとコンテナの両方において、セキュリティに対する統一されたアプローチを確保することです。このモジュールでは、OpenShift Compliance Operatorを使用してインフラストラクチャをスキャンし、報告された脆弱性を修正することで、クラスターが厳格なセキュリティ標準を満たしていることを確認します。また、セキュリティ監査担当者が仮想化インフラストラクチャへのアクセスを制限する必要がある場合、専用のユーザーアカウントとアクセスロールを設定します。
 
 [[scan_comp]]
-== Scanning Infrastructure with the OpenShift Compliance Operator
+== OpenShift Compliance Operator を使用したインフラストラクチャのスキャン
 
-This section of our lab will focus on making use of the OpenShift Compliance Operator to configure security scans in your OpenShift cluster. The compliance operator can help ensure that the hosts in your OpenShift environment meet specific security standards, and are deployed to meet those standards.
+このラボのセクションでは、OpenShift Compliance Operator を使用して OpenShift クラスターのセキュリティスキャンを設定する方法に焦点を当てます。Compliance Operator は、OpenShift 環境内のホストが特定のセキュリティ標準に準拠していること、そしてそれらの標準に準拠するようにデプロイされていることを確認するのに役立ちます。
 
-NOTE: In our lab environment we will only be scanning and remediating our worker nodes, as it is a virtual hosted environment and doing so with the control plane can cause the cluster to become unstable.
+NOTE: ラボ環境では仮想ホスト環境であるため、ワーカーノードのスキャンと修復のみを行います。コントロール プレーンでこれを行うと、クラスターが不安定になる場合があります。
 
 image::module-02-sec-comp/01-compliance_overview.png[title="Compliance Overview", link=self, window=blank, width=100%]
 
-. Select *Operators* and then *Installed Operators* from the left side navigation menu, confirm that you have selected *All Projects* and select the *Compliance Operator*.
+. 左側のナビゲーション メニューから *Operators* を選択し、次に *Installed Operators* を選択し、*All Projects* が選択されていることを確認して、*Compliance Operator* を選択します。
 +
 image::module-02-sec-comp/02-compliance_operator.png[title="Compliance Operator", link=self, window=blank, width=100%]
 +
-. This takes you to the *Operator details* page, use the horizontal scrollbar to move across and locate the *ScanSetting* tab.
+. これにより、 *Operator details* ページに移動します。水平スクロールバーを使用して移動し、*ScanSetting* タブを見つけます。
 +
 image::module-02-sec-comp/03-compliance_details.png[title="Compliance Details", link=self, window=blank, width=100%]
 +
-. Click the *Create ScanSetting* button.
+. *Create ScanSetting* の作成*ボタンをクリックします。
 +
 image::module-02-sec-comp/04-scansetting_button.png[title="Create ScanSetting Button", link=self, window=blank, width=100%]
 +
-. On the *Create ScanSetting* page, set the name of the scan to `scan01`. Then click the *YAML view* radio button.
+. *Create ScanSetting* ページで、スキャンの名前を `scan01` に設定します。次に、*YAML view* のラジオボタンをクリックします。
 +
 image::module-02-sec-comp/05-create_scansetting.png[title="Create Scansetting", link=self, window=blank, width=100%]
 +
-. In the ScanSetting YAML details, make note of the following values that are set by default:
-  * The *autoApplyRemediations* field is set to *false*.
-  * The *roles* to be scanned by default include entries for *master* and *worker* nodes.
-  * The *name* field is set to *scan01* which you entered on the form view.
-. Delete the entry for *master* to ensure we don't scan or remediate control plane nodes.
-. Click the *Create* button to create this simple scansetting definition that will only scan worker nodes.
+. ScanSetting YAML の詳細で、デフォルトで設定されている以下の値をメモしてください。
+ * *autoApplyRemediations* フィールドは *false* に設定されています。
+ * デフォルトでスキャンされる *roles* には、*master* ノードと *worker* ノードのエントリが含まれています。
+ * *name* フィールドは、フォームビューで入力した *scan01* に設定されています。
+. コントロールプレーンノードのスキャンや修復が行われないように、*master* のエントリを削除します。
+. *Create* ボタンをクリックして、ワーカーノードのみをスキャンするシンプルな scansetting 定義を作成します。
+
 +
 image::module-02-sec-comp/06-scansetting_details.png[title="ScanSetting Details", link=self, window=blank, width=100%]
 +
-. Now click on the *Profile* tab where there are a number of pre-defined scanning profiles.
-. In the search box, type `rhcos4` and locate the FedRamp moderate profile *rhcos4-moderate* in the list.
+. 次に、いくつかの定義済みスキャン プロファイルがある *Profile* タブをクリックします。
+. 検索ボックスに `rhcos4` と入力し、リストから FedRamp moderateのプロファイル *rhcos4-moderate* を見つけます。
 +
 image::module-02-sec-comp/07-profiles_detail.png[title="Profiles Detail", link=self, window=blank, width=100%]
 +
-. Click on *rhcos4-moderate* and then on the *YAML*.
-Scroll down the output to browse the rules that are enforced as a part of this scan.
-A quick glimpse at the side panel shows that there are quite a few of them.
+. *rhcos4-moderate* をクリックし、次に *YAML* をクリックします。
+出力を下にスクロールして、このスキャンで適用されているルールを確認します。
+サイドパネルをざっと見ると、かなりの数のルールがあることがわかります。
 +
 image::module-02-sec-comp/08-rhcos4_mod_rules.png[title="RHCOS4-Moderate Rules", link=self, window=blank, width=100%]
 +
-. When you are done reviewing the rules, return to the *Operator details* page by clicking your browser's *back button* twice.
+. ルールの確認が完了したら、ブラウザの *back button* を 2 回クリックして、*Operator details* ページに戻ります。
 +
-NOTE: Additional details on the profiles available can be found https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/security_and_compliance/compliance-operator#compliance-operator-supported-profiles[here^].
+NOTE: 利用可能なプロファイルの詳細については https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/security_and_compliance/compliance-operator#compliance-operator-supported-profiles[こちら^]をご覧ください。
 +
-. Next we want to create a *ScanSettingBinding*, pairing a *Profile* with our *ScanSetting* definition we created.
-We do this by navigating to the *Scan Setting Binding* tab, and clicking the *Create ScanSettingBinding* button.
+. 次に、*Profile* と作成した *ScanSetting* 定義をペアにして、*ScanSettingBinding* を作成します。
+*Scan Setting Binding* タブに移動し、*Create ScanSettingBinding* ボタンをクリックします。
 +
 image::module-02-sec-comp/09-create_scansettingbinding.png[title="Create ScanSettingBinding", link=self, window=blank, width=100%]
 +
-. In the ScanSettingBinding YAML details, let us make a few changes:
-  * The *metadata.name* value should be set to `fedramp01`
-  * The *settingsRef.name* field is set to `scan01` which we created earlier.
-. Click the *Create* button.
+. ScanSettingBinding YAMLの詳細で、いくつか変更を加えましょう。
+  * *metadata.name* の値は `fedramp01` に設定します。
+  * *settingsRef.name* フィールドは、先ほど作成した `scan01` に設定します。
+. *Create* ボタンをクリックします。
 +
-NOTE: The profile is set to rhcos4-moderate (the fedramp moderate profile) by default.
+NOTE: プロファイルは、デフォルトで rhcos4-moderate (fedramp 中程度のプロファイル) に設定されています。
 +
 image::module-02-sec-comp/10-scansettingbinding_details.png[title="ScanSettingBinding Details", link=self, window=blank, width=100%]
 +
-. After the *ScanSettingBinding* is created, the fedramp01 scan will be run automatically.
-You can view this on the *Compliance Suite* tab.
+. *ScanSettingBinding* が作成されると、fedramp01 スキャンが自動的に実行されます。
+これは *Compliance Suite* タブで確認できます。
 +
 image::module-02-sec-comp/11-compliance_suite.png[title="Compliance Suite", link=self, window=blank, width=100%]
 +
-. This Compliance Suite runs the defined scans against the specified nodes, in our case the worker nodes defined in *scan01*.
-. For more detailed information you can click on the *Compliance Scan* tab. There you can watch as the scan proceeds through the steps of *RUNNING, AGGREGATING, and DONE*.
+. このコンプライアンススイートは、指定されたノード（この場合は *scan01* で定義されたワーカーノード）に対して定義されたスキャンを実行します。
+. 詳細情報については、*Compliance Scan* タブをクリックしてください。そこでは、スキャンが *RUNNING, AGGREGATING, そしてDONE* のステップを経て進行する様子を確認できます。
+
 +
 image::module-02-sec-comp/12-compliance_scan.png[title="Compliance Scan", link=self, window=blank, width=100%]
 +
-. Once the scan completes (3-5 minutes on average) you can check your results by clicking on the *ComplianceCheckResult* tab. It will list all of the scans that were a part of the compliance suite we chose and their results.
+. スキャンが完了すると（平均3～5分）、*ComplianceCheckResult* タブをクリックして結果を確認できます。選択したコンプライアンススイートに含まれるすべてのスキャンとその結果が一覧表示されます。
 +
-. Change the search bar to *Label* and apply the following labels:
+. 検索バーを *Label* に変更し、次のラベルを適用します。
   * `compliance.openshift.io/check-status=FAIL`
   * `compliance.openshift.io/check-severity=high`
 +
 image::module-02-sec-comp/13-compliance_check_results.png[title="Compliance Check Results", link=self, window=blank, width=100%]
 +
-. Six high severity checks have a failed status:
+. 重大度の高いチェック 6 つが失敗ステータスになっています。
 +
 |===
 | *ComplianceCheckResult* | *Check-Severity* | *Check-Status*
@@ -97,126 +100,129 @@ image::module-02-sec-comp/13-compliance_check_results.png[title="Compliance Chec
 | rhcos4-moderate-worker-no-empty-passwords| high| FAIL
 |===
 +
-NOTE: This is a table to better organize the view of each failure detected on the scan, you can search for each of these failures manually in the OpenShift console.
+NOTE: これは、スキャンで検出された各障害のビューをより適切に整理するためのテーブルであり、OpenShift コンソールでこれらの各障害を手動で検索できます。
 
 [[node_remediate]]
-== Node Remediation with the OpenShift Compliance Operator
-When it comes to remediation, it can be performed in one of two ways. Automatically, which may seem simple and the easiest way to do it, but can lead to unexpected results. Or manually, which can be tedious, but allows you to canary test each application, and later automate through a tool like gitops that checks for failures before proceeding.
+== OpenShift Compliance Operator を使用したノードの修復
+修復には、2つの方法があります。自動修復はシンプルで最も簡単な方法のように見えますが、予期しない結果につながる可能性があります。手動修復は手間がかかりますが、各アプリケーションでカナリアテストを実施し、その後、処理を進める前に障害をチェックする gitops などのツールを使って自動化することができます。
 
-NOTE: One example of this is the *rhcos4-moderate-worker-enable-fips-mode* which was listed as a high severity, fail status on our previous scan, cannot be applied unless at install time if FIPS mode is enabled. Attempting to auto-remediate this can lead to issues with your cluster.
+NOTE: 一例として、*rhcos4-moderate-worker-enable-fips-mode* が挙げられます。これは前回のスキャンで重大度「高」、ステータス「失敗」と表示されており、インストール時に FIPS モードが有効になっていない限り適用できません。これを自動修復しようとすると、クラスターに問題が発生する可能性があります。
 
-In this section we are going to choose one of our failures from the previous scan, and remediate it manually.
+このセクションでは、前回のスキャンから失敗の 1 つを選択し、手動で修復します。
 
-. Starting from the list above we are going to choose to remediate the following scan result: *rhcos4-moderate-worker-coreos-pti-kernel-arguments* as required by our audit.
+. 上記のリストから、監査の要件に従って、次のスキャン結果 *rhcos4-moderate-worker-coreos-pti-kernel-arguments* を修復することを選択します。
 +
-Note: The *rhcos4-moderate-worker-coreos-pti-kernel-argument* is required to isolate kernel and userspace page tables to prevent attacks like the https://bugzilla.redhat.com/show_bug.cgi?id=1519781[Meltdown^] vulnerability.
+Note: https://bugzilla.redhat.com/show_bug.cgi?id=1519781[Meltdown^] 脆弱性のような攻撃を防ぐために、カーネルとユーザー空間のページ テーブルを分離するには、*rhcos4-moderate-worker-coreos-pti-kernel-argument* が必要です。
 +
-Click on the *Compliance Remediation* tab, and in the *Name* search bar type the term `pti-kernel` to find the suggested remediation for *rhcos4-moderate-worker-coreos-pti-kernel-argument*. When the result appears, click the three-dot menu on the right, and select *Edit ComplianceRemediation* from the menu that appears.
+*Compliance Remediation* タブをクリックし、*Name* 検索バーに
+`pti-kernel` と入力して、*rhcos4-moderate-worker-coreos-pti-kernel-argument* の推奨修復方法を検索します。結果が表示されたら、右側の3点メニューをクリックし、表示されるメニューから *Edit ComplianceRemediation* を選択します。
 +
 image::module-02-sec-comp/14-compliance_remediation.png[title="Compliance Remediation", link=self, window=blank, width=100%]
 +
-. This will launch the ComplianceRemediation details page with a YAML block describing the current status.
-. Under the *spec* section you will see that the current *apply* state is *false*, and the *kernelArugument* that will be applied is that *pti=on*. Under the *status* section we see that the remediation state is *NotApplied.*
+. これにより、現在のステータスを示すYAMLブロックを含むComplianceRemediationの詳細ページが起動します。
+. *spec* セクションでは、現在の *apply* 状態が *false* であり、適用される *kernelArugument* が *pti=on* であることがわかります。*status* セクションでは、修復状態が *NotApplied* であることがわかります。
 +
 image::module-02-sec-comp/15-compred_details.png[title="Compliance Remediation Details", link=self, window=blank, width=100%]
 +
-. Under the *spec* section change the *apply* field to `true` and click the *Save* button.
+. *spec* セクションで、*apply* フィールドを `true` に変更し、*Save* ボタンをクリックします。
 +
 image::module-02-sec-comp/16-compred_true.png[title="Compliance Remediation True", link=self, window=blank, width=100%]
 +
-. You will be prompted with a message that lets you know that this is a managed resource, click the *Save* button to sart the remediation process.
+. これが管理対象リソースであることを知らせるメッセージが表示されます。*Save* ボタンをクリックして修復プロセスを開始します。
 +
 image::module-02-sec-comp/17-managed_resource.png[title="Managed Resource Prompt", link=self, window=blank, width=100%]
 +
-. Once applied, a *MachineConfig* will be generated to provide the remediation, and each node in the cluster will be cordoned, drained, and remediated in sequence.
-. On the left side menu, click on *Compute* and *Nodes* to observe the process.
+. 適用すると、修復を提供するための *MachineConfig* が生成され、クラスター内の各ノードが順番に遮断、ドレイン、修復されます。
+. 左側のメニューで、*Compute* と *Nodes* をクリックしてプロセスを確認します。
 +
 image::module-02-sec-comp/18-nodes_cordoned.png[title="Node 3 Cordoned", link=self, window=blank, width=100%]
 +
-. You will see a node enter the _SchedulingDisabled_ state to begin its remediation. Click on that node for its Node details page, and notice that the event log shows the node was cordoned to apply the update, and you can also see CPU and Memory utilization drop off as the node was successfully drained.
+. ノードが修復を開始するために _SchedulingDisabled_ 状態に移行しているのが確認できます。そのノードをクリックしてノードの詳細ページを表示すると、イベントログにノードが更新を適用するために停止されたことが示され、ノードのドレインが正常に完了したため、CPUとメモリの使用率が低下していることも確認できます。
 +
 image::module-02-sec-comp/19-node_3_updating.png[title="Node 3 Updating", link=self, window=blank, width=100%]
 +
-NOTE: This process can take quite a bit of time to complete depending on how busy the cluster currently is, and how many nodes there are to remediate as they each have to evict pods safely and reboot to apply the update. Also, you may be logged out of the cluster while the oauth pods are being evacuated.
+NOTE: このプロセスは、クラスターの現在の負荷状況や、修正対象のノード数に応じて、完了までにかなりの時間がかかる場合があります。これは、各ノードがポッドを安全に退避させ、再起動して更新を適用する必要があるためです。また、OAuthポッドの退避中は、クラスターからログアウトされている場合があります。
 +
-. After several minutes the *MachineConfig* will be applied to each of the worker nodes in our cluster, and we can recheck our Compliance Scan results.
-. Return to the *Compliance Operator* configuration by clicking on *Operators* and *Installed Operators* in the left side menu.
+. 数分後、*MachineConfig* がクラスター内の各ワーカーノードに適用され、コンプライアンススキャンの結果を再確認できます。
+. 左側のメニューで *Operators* と *Installed Operators* をクリックして、*Compliance Operator* 構成に戻ります。
 +
 image::module-02-sec-comp/02-compliance_operator.png[title="OpenShift Compliance Operator", link=self, window=blank, width=100%]
 +
-. Click on the Compliance Scan tab, where you will see the scan we completed earlier. Click the three-dot menu, and select the option to delete the current scan.
+. Compliance Scan タブをクリックすると、先ほど完了したスキャンが表示されます。3点メニューをクリックし、現在のスキャンを削除するオプションを選択します。
 +
 image::module-02-sec-comp/20-delete_compliance_scan.png[title="Delete Compliance Scan", link=self, window=blank, width=100%]
 +
-. You will be prompted to be sure that you want to delete the current compliance scan. Click the *Delete* button.
+. 現在のコンプライアンススキャンを削除するかどうかを確認するメッセージが表示されます。*Delete* ボタンをクリックしてください。
 +
 image::module-02-sec-comp/21-delete_scan_prompt.png[title="Delete Scan Prompt", link=self, window=blank, width=100%]
 +
-. The *Compliance Suite* object defined earlier will automatically kick off a new scan which you will see appear on your screen.
+. 先ほど定義した *Compliance Suite* オブジェクトは自動的に新しいスキャンを開始し、画面に表示されます。
 +
 image::module-02-sec-comp/22-new_compliance_scan.png[title="New Compliance Scan", link=self, window=blank, width=100%]
 +
-. As before this can will take a few minutes to complete, but once it is complete the results can be viewed by clicking on the *ComplianceCheckResult* tab, and searching for the *rhcos4-moderate-worker-coreos-pti-kernel-argument* and noticing that its label is now *check-status=PASS* instead of *FAIL*
+. 以前と同様に、完了するまでに数分かかる場合がありますが、完了したら、*ComplianceCheckResult* タブをクリックし、 *rhcos4-moderate-worker-coreos-pti-kernel-argument* を検索して結果を表示できます。ラベルが *FAIL* ではなく *check-status=PASS* になっていることがわかります。
+
 +
 image::module-02-sec-comp/23-check_status_pass.png[title="Check Status Pass", link=self, window=blank, width=100%]
 
-With the completion of these sections we have created a compliance scan and successfully remediated an identified vulnerability using the OpenShift Compliance Operator.
+これらのセクションを完了すると、コンプライアンス スキャンが作成され、OpenShift Compliance Operator を使用して特定された脆弱性が正常に修復されました。
+
 
 [[cluster_rbac]]
-== Configuring Role-based Access Control for Cluster Roles
+== Cクラスターロールに対するロールベースアクセス制御の設定
 
-One of the notable features that OpenShift is known for compared to vanilla Kubernetes is its rich set of Role-Based Access Controls for separate user accounts and cluster roles that define what each user is able to do when logged into the cluster. In this section of the module we are going to create a read-only account for our auditor and explore the limitations by which they are bound.
+OpenShift が標準の Kubernetes と比較して特に優れている点の一つは、ユーザーアカウントとクラスターロールを個別に管理できる豊富なロールベースアクセス制御です。これらのロールベースアクセス制御により、クラスターにログインした各ユーザーが実行できる操作を定義できます。このモジュールのこのセクションでは、監査担当者用の読み取り専用アカウントを作成し、そのアカウントに適用される制限事項について説明します。
 
-. Start by clicking on *User Management* and *Users* in the left side menu.
-. You will see the current *admin* user that you are logged in as listed, and you will see that the identity is provided by the htpasswd_provider:admin authenticator.
+. まず、左側のメニューで *User Management* と *Users* をクリックします。
+. 現在ログインしている *admin* ユーザーがリストに表示され、その ID が htpasswd_provider:admin 認証システムによって提供されていることがわかります。
 +
 image::module-02-sec-comp/24-user_list.png[title="User List", link=self, window=blank, width=100%]
 +
-NOTE: If no other authenication source has been set up prior and you are logged in as the default kubeadmin account, you will see a wizard here to assist with setting up your first authentication source.
+NOTE: 以前に他の認証ソースが設定されておらず、デフォルトの kubeadminアカウントとしてログインしている場合は、最初の認証ソースの設定を支援するウィザードがここに表示されます。
 
-=== Create a Group
+=== グループを作成する
 
-. Now click on *Groups* on in the left menu, and click the button for *Create Group*
+. 左側のメニューで *Groups* をクリックし、*Create Group* ボタンをクリックします。
 +
 image::module-02-sec-comp/25-create_group.png[title="Create Group", link=self, window=blank, width=100%]
 +
-. In the Create Group YAML dialog, set the name of the group to `auditor_readonly` and add the users `auditor1` and `auditor2`. Click the *Create* button.
+. Create Group YAMLダイアログで、グループ名を  `auditor_readonly` に設定し、ユーザー `auditor1` と `auditor2` を追加します。*Create* ボタンをクリックします。
 +
 image::module-02-sec-comp/26-create_group_settings.png[title="Create Group Settings", link=self, window=blank, width=100%]
 +
-. You will be presented with the *Group details* screen where you can see the two user accounts listed, and we can define permissions by assigning the group a role binding. Click on the *RoleBindings* menu.
+. *Group details* 画面が表示され、2つのユーザーアカウントがリストされます。グループにロールバインディングを割り当てることで権限を定義できます。*RoleBindings* メニューをクリックしてください。
 +
 image::module-02-sec-comp/27-group_details.png[title="Group Details", link=self, window=blank, width=100%]
 +
-. After clicking on RoleBindings, click the *Create binding* button.
+. RoleBindings をクリックした後、*Create binding* ボタンをクリックします。
 +
 image::module-02-sec-comp/28-create_binding.png[title="Create Binding", link=self, window=blank, width=100%]
 +
-. This will bring you to the *Create RoleBinding* page, on this page select the following to create a read-only role binding for the auditor, and click the *Create* button:
-  * *Binding type:* Cluster-wide role binding
+. すると *Create RoleBinding* ページが表示されます。このページで、監査担当者用の読み取り専用ロールバインディングを作成するために以下を選択し、*Create* ボタンをクリックします。
+  * *Binding type:* クラスター全体のロールバインディング
   * *Name:* `cluster_readonly`
   * *Role name:* view
 +
 image::module-02-sec-comp/29-role_binding_details.png[title="RoleBinding Details", link=self, window=blank, width=100%]
 
-=== Create the User Accounts
+=== ユーザーアカウントを作成します
 
-. With the role binding created, we now need to add our two auditor accounts to our group.
-. In the left side menu, click *Administration* and *CustomResourceDefinitions* and use the search bar to look for the *OAuth* entry. When you find it, click it.
+. ロールバインディングが作成されたので、2つの監査アカウントをグループに追加する必要があります。
+. 左側のメニューで、*Administration* と *CustomResourceDefinitions* をクリックし、検索バーで *OAuth* エントリを探します。見つかったらクリックします。
 +
 image::module-02-sec-comp/30-crd_oauth.png[title="CRDs OAuth", link=self, window=blank, width=100%]
 +
-. This will load the details page for the OAuth custom resource definition. On this page, click on *Instances*, and then click on *cluster*.
+. これにより、OAuthカスタムリソース定義の詳細ページが読み込まれます。このページで *Instances* をクリックし、次に *cluster* をクリックします。
 +
 image::module-02-sec-comp/31-oauth_instances.png[title="OAuth Instances", link=self, window=blank, width=100%]
 +
-. On the cluster configuration page you will see where the htpasswd_provider is already currently configured, but there will also be a dropdown menu that has the word *Add* and you can select another provider from that list. Click and select *HTPasswd* as the option.
+. クラスター設定ページでは、htpasswd_providerが既に設定されていることを確認できますが、*Add* という単語を含むドロップダウンメニューがあり、そこから別のプロバイダーを選択することもできます。クリックして、オプションとして *HTPasswd* を選択してください。
 +
 image::module-02-sec-comp/32-add_htpass.png[title="Add Authentication", link=self, window=blank, width=100%]
 +
-NOTE: Notice that in addition to HTPasswd, there are many options that allow you to integrate external authorization and authentication solutions with Red Hat OpenShift, which is perfect for larger enterprises.
+NOTE: HTPasswd に加えて、外部の認可および認証ソリューションを Red Hat OpenShift と統合できるオプションが多数あることに注意してください。これは、大規模な企業に最適です。
 +
-. You will be presented with a page that allows you to add in an HTPasswd file or supply usernames and hashed credentials for that purpose. Set the name of the identiry provider to `auditor_login` and paste the following syntax into the text box before clicking the *Add* button.
+. HTPasswdファイルを追加するか、ユーザー名とハッシュ化された認証情報を入力するページが表示されます。IDプロバイダーの名前を `auditor_login` に設定し、以下の構文をテキストボックスに貼り付けてから *Add* ボタンをクリックしてください。
 +
 [source,sh,role=execute]
 ----
@@ -226,52 +232,52 @@ auditor2:$apr1$4Vpe3O5u$OhjtFGDNHnl2RWiNnhlhZ0
 +
 image::module-02-sec-comp/33-add_identity_provider.png[title="Add Identity Provider", link=self, window=blank, width=100%]
 +
-. Once added you will be returned to the Cluster OAuth details page and you will now see two identity providers listed, along with a blue notice that OAuth is being reconfigured. Click on the link provided for *View authentication conditions for reconfiguration status*.
+. 追加が完了すると、クラスターのOAuth詳細ページに戻り、2つのIDプロバイダーと、OAuthが再構成中であることを示す青い通知が表示されます。*View authentication conditions for reconfiguration status* のリンクをクリックしてください。
 +
 image::module-02-sec-comp/34-oauth_reconfig.png[title="OAuth Reconfiguration", link=self, window=blank, width=100%]
 +
-. You will be brought to a page that shows the progress as the authentication cluster operator is reconfigured, once all the pods are restarted, the status will change to *Available* and the message will say *All is well*.
+. 認証クラスター オペレーターの再構成の進行状況を示すページが表示されます。すべてのポッドが再起動されると、ステータスが *Available* に変わり、*All is well* というメッセージが表示されます。
 +
 image::module-02-sec-comp/35-oauth_reconfig_2.png[title="OAuth Reconfiguration Progressing", link=self, window=blank, width=100%]
 +
 image::module-02-sec-comp/36-oauth_reconfig_3.png[title="OAuth Reconfiguration Complete", link=self, window=blank, width=100%]
 
-=== Testing the Configuration
+=== 構成のテスト
 
-. With the OAuth configuration complete, we can now test our auditor login, and the limits of their account.
-. Log out of Red Hat OpenShift by clicking on *admin* at the top, and selecting *Log out* from the drop down menu.
+. OAuth 設定が完了したら、監査人のログインとアカウントの制限をテストできます。
+. 上部の *admin* をクリックし、ドロップダウン メニューから *Log out* を選択して、Red Hat OpenShift からログアウトします。
 +
 image::module-02-sec-comp/37-logout_openshift.png[title="Log Out OpenShift", link=self, window=blank, width=100%]
 +
-. There is now an option to login with the *auditor_login* identity provider on the main OpenShift page.
+. OpenShift のメイン ページに *auditor_login* ID プロバイダーを使用してログインするオプションが追加されました。
 +
 image::module-02-sec-comp/38-login_openshift.png[title="Log In OpenShift", link=self, window=blank, width=100%]
 +
-. Click on *auditor_login* and when presented use the following username and password combination:
+. *auditor_login* をクリックし、表示されたら次のユーザー名とパスワードの組み合わせを使用します。
   * *Username:* `auditor1`
   * *Password:* `auditor1pass!`
 +
 image::module-02-sec-comp/39-auditor1_login.png[title="Auditor 1 Login", link=self, window=blank, width=100%]
 +
-. When the auditor logs in with the read-only persmissions they will only be able to see a limited view of the OpenShift console from the Admin perspective.
+. 監査人が読み取り専用権限でログインすると、管理者の観点から OpenShift コンソールの限定されたビューのみを表示できるようになります。
 +
 image::module-02-sec-comp/40-auditor1_admin_view.png[title="Auditor 1 Admin View", link=self, window=blank, width=100%]
 +
-. If the auditor needs to validate our virtual machine environment, they can still access that by clicking on *Virtualization* and *VirtualMachines* in the left side menu.
-. They can see all virtual machines in each project, and their current status.
-. The auditor can even click on a specific machine and get additional details. In this case, they want to test the *database* server in the *webapp-vms* namespace.
+. 監査人が仮想マシン環境を検証する必要がある場合は、左側のメニューで *Virtualization* と *VirtualMachines* をクリックすることでアクセスできます。
+. 各プロジェクト内のすべての仮想マシンと、それぞれの現在のステータスを確認できます。
+. 監査人は特定のマシンをクリックして、詳細情報を取得することもできます。今回の場合は、*webapp-vms* 名前空間の *database* サーバーをテストします。
 +
 image::module-02-sec-comp/41-auditor1_vm_view.png[title="Auditor 1 VM View", link=self, window=blank, width=100%]
 +
-. Once they are on the VirtualMachine details page they can see the information about the virtual guest, including its CPU and memory utilization, but they are prevented from launching the VNC console, or manipulating the machine state in any way as the buttons are greyed out.
+. 仮想マシンの詳細ページにアクセスすると、CPU やメモリの使用率など、仮想ゲストに関する情報が表示されますが、ボタンがグレー表示されているため、VNC コンソールを起動したり、マシンの状態を操作したりすることはできません。
 +
 image::module-02-sec-comp/42-auditor1_database_readonly.png[title="Auditor 1 Database ReadOnly", link=self, window=blank, width=100%]
 +
-. At your leisure you may explore the UI and confirm that the Auditor1 account is read only. When you are finished proceed to the next module.
+. お時間のある時にUIを確認し、Auditor1アカウントが読み取り専用になっていることを確認してください。完了したら、次のモジュールに進んでください。
 
-In this section of our lab we created a limited read-only account with view permissions for the auditors that will be examining our infrastructure. As mentioned before RBAC in Red Hat OpenShift is extremely versatile, and you can explore other customized roles and rolebindings by viewing the documentation https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/authentication_and_authorization/using-rbac[here^].
+ラボのこのセクションでは、インフラストラクチャを検査する監査担当者向けに、表示権限を持つ読み取り専用アカウントを作成しました。前述の通り、Red Hat OpenShiftのRBACは非常に汎用性が高く、 https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/authentication_and_authorization/using-rbac[こちら^]のドキュメントをご覧いただくことで、その他のカスタマイズされたロールやロールバインディングについてもご確認いただけます。
 
 
-== Summary
+== まとめ
 
-In this module we were preparing for our company's annual security audit. By using the OpenShift Compliance Operator to scan and apply settings to our environment to ensure they meet our security standards, and by showing how RBAC can be configured to allow limited access to specific individuals, we can demonstrate how our OpenShift Virtualization infrastructure can be tightened and secured.
+このモジュールでは、会社の年次セキュリティ監査の準備をしました。OpenShift Compliance Operator を使用して環境をスキャンし、設定を適用してセキュリティ基準を満たしていることを確認し、RBAC を設定して特定のユーザーのみに制限付きアクセスを許可する方法を示すことで、OpenShift Virtualization インフラストラクチャのセキュリティ強化とセキュリティ強化を実現できることを実証しました。
