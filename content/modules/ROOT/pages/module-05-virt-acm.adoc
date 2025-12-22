@@ -1,151 +1,153 @@
-= Advanced Management of Virtual Machines
+= 仮想マシンの高度な管理
 
-== Introduction
+== はじめに
 
-As Legacy Systems Inc. continues its expansion, we've found ourselves deploying OpenShift Virtualization across multiple data centers and public cloud regions to host our critical VMs. With the potential to host virtualized clusters in various cloud providers such as AWS, IBM Cloud, and Google Cloud teams need to balance investments in and training on new platforms while keeping existing infrastructure and applications running. Managing these disparate VM workloads can become increasingly complex without a unified approach, which is where Red Hat Advanced Cluster Management for Kubernetes comes in. Using RHACM as a single pane of glass interface to manage all of your virtual workloads no matter where they live is key to running a large distributed virtualized environment. In this module we will explore how to discover our working cluster in RHACM, how to use it to visualize our virtual workloads, and how to deploy a virtual machine to a cluster remotely.
+Legacy Systems Inc. は事業拡大を続けており、重要な仮想マシンをホストするために、複数のデータセンターとパブリッククラウドリージョンに OpenShift Virtualization を導入しています。AWS、IBM Cloud、Google Cloud などのさまざまなクラウドプロバイダーで仮想化クラスタをホストする可能性があるため、チームは既存のインフラストラクチャとアプリケーションの稼働を維持しながら、新しいプラットフォームへの投資とトレーニングのバランスを取る必要があります。これらの異なる仮想マシンワークロードの管理は、統一されたアプローチがなければますます複雑になる可能性があります。そこで Red Hat Advanced Cluster Management for Kubernetes の出番です。RHACM を単一のインターフェースとして使用し、すべての仮想ワークロードを、その場所に関係なく管理することが、大規模な分散仮想化環境を運用する上で重要です。このモジュールでは、RHACM で稼働中のクラスタを検出する方法、RHACM を使用して仮想ワークロードを視覚化する方法、そして仮想マシンをリモートからクラスタにデプロイする方法を説明します。
 
 [[discover_cluster]]
-== Discover Your Cluster
+== クラスターの検出
 
-NOTE: This section of the lab uses a shared ACM hub cluster whose console URL will be provided by your lab proctor. You will login to the workstation interface where you will be assigned a user account: user1 - user**n** and will login with that user to complete this lab.
+NOTE: このラボのセクションでは、共有 ACM ハブクラスターを使用します。コンソール URL はラボ監督者から提供されます。ワークステーション インターフェースにログインすると、ユーザー アカウント（user1 - user**n**）が割り当てられます。このユーザーでログインし、このラボを完了してください。
 
-. Log in to the console of the shared Red Hat Advanced Cluster Managment (RHACM) hub with the assigned credentials for your lab user account.
+. ラボ ユーザー アカウントに割り当てられた資格情報を使用して、共有 Red Hat Advanced Cluster Managment (RHACM) ハブのコンソールにログインします。
 +
 image::module-05-virt-acm/00-openshift_login.png[title="OpenShift Login", link=self, window=blank, width=100%]
 +
-. When you first log in, you will see that there are no clusters present to manage. Click the button to *Import cluster*.
+. 初めてログインすると、管理対象のクラスターが存在しないことがわかります。*Import cluster* ボタンをクリックしてください。
 +
 image::module-05-virt-acm/01-import_cluster.png[title="Import Cluster", link=self, window=blank, width=100%]
 +
-NOTE: It's possible that if other lab attendees have advanced past this step the page will not exactly reflect the screenshot above. You can still import your cluster and continue your lab by clicking the *Import Cluster* button at the top.
+NOTE: 他のラボ参加者がこのステップをすでに通過している場合、ページの内容が上記のスクリーンショットと完全には一致しない可能性があります。その場合でも、上部にある *Import Cluster* ボタンをクリックしてクラスターをインポートし、ラボを続行できます。
 +
 image::module-05-virt-acm/01a-import_cluster_alt.png[title="Import Cluster Alt", link=self, window=blank, width=100%]
 +
-. The next screen you will be presented with is the *Details* page for the *Import an existing cluster* wizard. Fill in the fields on the page with the following values:
+. 次の画面は、*Import an existing cluster* ウィザードの *Details* ページです。このページのフィールドに以下の値を入力してください。
 +
 * *Name:* `userX-virt-cluster`
 * *Cluster set:* legacy-systems-inc
-* *Import mode:* Enter your server URL and API token for the existing cluster
+* *Import mode:* 既存のクラスターのサーバーURLとAPIトークンを入力します
 +
 image::module-05-virt-acm/02-import_cluster_details.png[title="Import Cluster Details", link=self, window=blank, width=100%]
 +
-. Once you have selected the *Import mode* you will be prompted to provide the *Server URL* and *API Token* to discover your cluster. You will need to get these values from your original cluster in order to discover it.
-. Return to the tab with your original lab cluster open, and click on the *admin* user at the top and select the option to *Copy login command* from the dropdown menu.
+. *Import mode* を選択すると、クラスターを検出するための *Server URL* と *API Token* の入力を求められます。クラスターを検出するには、元のクラスターからこれらの値を取得する必要があります。
+. 元のラボクラスターを開いたタブに戻り、上部の *admin* ユーザーをクリックして、ドロップダウンメニューから *Copy login command* オプションを選択します。
+
 +
 image::module-05-virt-acm/03-copy_login_command.png[title="Copy Login Command", link=self, window=blank, width=100%]
 +
-. A new tab will open and you will be prompted to login to your cluster through the htpass_provider authorization agent again. As a reminder, your cluster admin credentials are:
+. 新しいタブが開き、htpass_provider 認証エージェントを介してクラスターに再度ログインするよう求められます。クラスター管理者の認証情報は以下の通りです。
 +
 * *User:* `{openshift_cluster_admin_username}`
 * *Password:* `{openshift_cluster_admin_password}`
 +
-. When you login you will see a large white screen with a link named *Display Token*. Click it.
+. ログインすると、大きな白い画面に *Display Token* というリンクが表示されます。それをクリックしてください。
 +
 image::module-05-virt-acm/04-display_token.png[title="Display Token", link=self, window=blank, width=100%]
 +
-. When you click on it, you will see a page that shows you a CLI authentication command with both the *API Token* and the *Server URL* value.
+. これをクリックすると、*API Token* と *Server URL* の値の両方を含む CLI 認証コマンドを示すページが表示されます。
 +
 image::module-05-virt-acm/05-display_api_token_server_url.png[title="Display API Token, Server URL", link=self, window=blank, width=100%]
 +
-. Copy and paste each of these values over into their respective fields on the *Details* page of the *Import an existing cluster* wizard. You may click on the *eye* button on the right side to see the *API Token* to ensure it copied correctly. When you are ready to continue, click the *Next* button.
+. これらの値をそれぞれコピーし、*Import an existing cluster* ウィザードの *Details* ページのそれぞれのフィールドに貼り付けます。右側の *eye* ボタンをクリックすると *API Token* が表示され、正しくコピーされたことを確認できます。準備ができたら、*Next* ボタンをクリックしてください。
 +
 image::module-05-virt-acm/06-paste_api_token_server_url.png[title="Paste API Token, Server URL", link=self, window=blank, width=100%]
 +
-. The next page in the wizard is the *Automation* page which allows you to configure automation templates using Ansible Automation Platform to perform various cluster management duties in a multicluster environment. These actions are currently beyond the scope of this workshop, click the *Next* button to continue.
+. ウィザードの次のページは *Automation* ページで、Ansible Automation Platform を使用して自動化テンプレートを設定し、マルチクラスタ環境で様々なクラスタ管理タスクを実行できます。これらの操作は現在このワークショップの範囲外ですので、*Next* ボタンをクリックして続行してください。
 +
 image::module-05-virt-acm/07-auto_template.png[title="Automation Page", link=self, window=blank, width=100%]
 +
-. The last page in the wizard is the *Review* page which allows you to confirm the details you have provided. When you are ready, click the *Import* button.
+. ウィザードの最後のページは *Review* ページで、入力した情報を確認できます。準備ができたら、*Import* ボタンをクリックしてください。
 +
 image::module-05-virt-acm/08-import_cluster_review.png[title="Import Cluster Review", link=self, window=blank, width=100%]
 +
-. You will see a brief pop-up that the process has begun and the cluster will start to import, the process should move fairly quickly, although this could be affected by the number of users attempting to import at the same time.
+. プロセスが開始され、クラスターがインポートを開始することを示す短いポップアップが表示されます。プロセスはかなり速く進むはずですが、同時にインポートを試行するユーザーの数によって影響を受ける可能性があります。
 +
 image::module-05-virt-acm/09-import_in_progress.png[title="Import In Progress", link=self, window=blank, width=100%]
 +
-. When the cluster import process completes you will see the cluster status listed as *Ready* and see a large amount of information about the cluster, including its *Infrastructure* type, the current subscribed software *Channel*, its *Cluster set*, links to open its console directly, and a list of *Labels* used to describe the cluster.
+. クラスターのインポート プロセスが完了すると、クラスターのステータスが *Ready* として表示され、クラスターの *Infrastructure* タイプ、現在サブスクライブされているソフトウェア *Channel*、*クCluster set*、コンソールを直接開くためのリンク、クラスターの説明に使用される *Labels* のリストなど、クラスターに関する大量の情報が表示されます。
 +
 image::module-05-virt-acm/10-import_complete.png[title="Import Complete", link=self, window=blank, width=100%]
 
 [[explore_cluster]]
-== Explore Managed Cluster Resources
+== 管理対象クラスタリソースの探索
 
-Now that we have discovered our cluster, lets take a look around at what benefits having Red Hat Advanced Cluster Managment for Kubernetes (RHACM) provides us when managing multiple clusters.
+クラスターが見つかったので、複数のクラスターを管理する際に Red Hat Advanced Cluster Managment for Kubernetes (RHACM) を使用するとどのような利点が得られるかを見てみましょう。
 
-. We can click on the *Nodes* tab to see a list of the physical nodes in our cluster and their current status. We can get a more descriptive view by clicking on a node itself. Try it now by clicking on *worker node 3* in your managed cluster.
+. *Nodes* タブをクリックすると、クラスター内の物理ノードのリストと現在のステータスが表示されます。ノード自体をクリックすると、より詳細な情報が表示されます。マネージドクラスター内の *worker node 3* をクリックして、実際に試してみてください。
+
 +
 image::module-05-virt-acm/11-node_list.png[title="Node List", link=self, window=blank, width=100%]
 +
-. A new tab will launch and display the node page from your mananged cluster, just as we reviewed in module 1.
+. モジュール 1 で確認したように、新しいタブが起動し、管理対象クラスターのノード ページが表示されます。
 +
 image::module-05-virt-acm/12-node_3_details.png[title="Node 3 Details", link=self, window=blank, width=100%]
 +
-. We can close this window and we can also see collected graphs on the managed cluster by click on the *Grafana* link at the top of the page. Click the link now.
+. このウィンドウを閉じると、ページ上部の *Grafana* リンクをクリックすることで、マネージドクラスタで収集されたグラフを見ることができます。リンクをクリックしてください。
 +
 image::module-05-virt-acm/13-grafana_link.png[title="Grafana Link", link=self, window=blank, width=100%]
 +
-. You will be prompted to login using your OpenShift credentials. Click the *Log in with OpenShift* button.
+. OpenShiftの認証情報を使用してログインするよう求められます。*Log in with OpenShift* ボタンをクリックしてください。
 +
 image::module-05-virt-acm/14-log_in_grafana.png[title="Grafana Login", link=self, window=blank, width=100%]
 +
-. The OpenShift login will appear and you will need to login with your associated *UserX* account and its password.
+. OpenShift ログインが表示されるので、関連付けられている *UserX* アカウントとそのパスワードを使用してログインする必要があります。
 +
 image::module-05-virt-acm/00-openshift_login.png[title="OpenShift Login", link=self, window=blank, width=100%]
 +
-. You will land on the *ACM - Clusters Overview* dashboard where you will see basic info about every cluster in the lab environment that is being managed.
+. *ACM - Clusters Overview* ダッシュボードが表示され、管理されているラボ環境内のすべてのクラスターに関する基本情報が表示されます。
 +
-NOTE: Depending on when you reach this stage, it may take a few moments for data to populate in the graphs.
+NOTE: この段階に到達するタイミングによっては、グラフにデータが表示されるまでに少し時間がかかる場合があります。
 +
 image::module-05-virt-acm/15-default_grafana_dashboards.png[title="Default Grafana Dashboards", link=self, window=blank, width=100%]
 +
-. You can click on the button for *All Dashboards* and select the dashboard for *Executive dashboards / Single Cluster View* in order to see how RHACM displays information about your cluster's virtual machine deployments in a centralized manner.
+. *All Dashboards* ボタンをクリックし、 *Executive dashboards / Single Cluster View* のダッシュボードを選択すると、RHACM がクラスターの仮想マシンの展開に関する情報を一元的に表示する方法を確認できます。
 +
 image::module-05-virt-acm/16-virt_cluster_view.png[title="Virt Cluster View", link=self, window=blank, width=100%]
 +
-. The top panel of the single cluster view presents you with a lot of handy information about the virtual machine workloads on your cluster, including the total number of virtual guests, their current status, and a breakdown of the operating systems reported by each VM.
+. 単一クラスター ビューの上部パネルには、仮想ゲストの合計数、現在のステータス、各 VM によって報告されたオペレーティング システムの内訳など、クラスター上の仮想マシンのワークロードに関する多くの便利な情報が表示されます。
 +
 image::module-05-virt-acm/17-single_cluster_top.png[title="Single Cluster Top", link=self, window=blank, width=100%]
 +
-. The bottom half of the single cluster view consisted of a number of collapsible panels that shows you important inforformation about resource utilization for your worker nodes and the virtual machines in your cluster. Click on *CPU Utilization* to expand it down and take a look. You can also reset the time window for collected stats with the drop down menu in the corner.
+. 単一クラスタービューの下半分は、複数の折りたたみ可能なパネルで構成されており、ワーカーノードとクラスター内の仮想マシンのリソース使用率に関する重要な情報が表示されます。*CPU Utilization* をクリックして展開し、詳細を確認してください。また、隅にあるドロップダウンメニューから、収集された統計情報の期間をリセットすることもできます。
 +
 image::module-05-virt-acm/18-single_cluster_bottom.png[title="Single Cluster Bottom", link=self, window=blank, width=100%]
 +
-. When you are done exploring the single cluster view, you can close that tab.
-. You should now be back on the *ACM - Clusters Overview* page where you can select the *All Dashboards* button again and this time select *Executive dashboards / Clusters Overview* so that you can see a view of your entire multi-cluster estate.
+. 単一クラスタービューの確認が終わったら、そのタブを閉じてください。
+. これで *ACM - Clusters Overview* ページに戻り、もう一度 *All Dashboards* ボタンを選択して、今度は *Executive dashboards / Clusters Overview*  を選択すると、マルチクラスター全体のビューが表示されます。
 +
 image::module-05-virt-acm/19-multi_cluster_view.png[title="Multi Cluster View", link=self, window=blank, width=100%]
 +
-. You will find that this dashboard presents information on each of our clusters, the total nodes available, the total number of virtual machines, and the status of those virtual machines across each cluster. Also with warnings, guest OS summaries, and resource utilizations just as before, but on a larger scale.
+. このダッシュボードには、各クラスターの情報、利用可能なノードの総数、仮想マシンの総数、そして各クラスター全体の仮想マシンのステータスが表示されます。また、警告、ゲストOSの概要、リソース使用率もこれまでと同様に表示されますが、表示範囲はより拡大されています。
 +
 image::module-05-virt-acm/20-multi_cluster_dashboard.png[title="Multi Cluster Dashboard", link=self, window=blank, width=100%]
 
-Now that we know how to observe the status of our virtual estate across a multicluster environment, lets see how we can manage it.
+マルチクラスター環境全体で仮想資産の状態を観察する方法がわかったので、それをどのように管理できるかを見てみましょう。
 
-NOTE: You may now close the tab where Grafana launched and return to the RHACM console
+NOTE: Grafanaを起動したタブを閉じて、RHACMコンソールに戻ることができます。
 
 [[manage_vms]]
-== Manage VMs From RHACM
+== RHACM から VM を管理する
 
-. Starting with the left side menu, click on *Infrastructure* followed by *Virtual machines*.
+. 左側のメニューから、*Infrastructure* をクリックし、次に *Virtual machines* をクリックします。
 +
 image::module-05-virt-acm/21-infrastructure_vms.png[title="Left Side Menu", link=self, window=blank, width=100%]
 +
-. You will be brought to a page that lists all of the virtual machines that RHACM can currently see.
-. The columns present help you sort and identify specific virtual machines by their *Name*, *Cluster*, *Namespace*, or *Node*.
-. The list of columns is fully customizable, and so are the number of machines displayed on the page.
+. RHACM が現在認識できるすべての仮想マシンの一覧ページが表示されます。
+. 表示される列は、*Name*、*Cluster*、*ネームスペース*、または *Node* で特定の仮想マシンを並べ替えたり識別したりするのに役立ちます。
+. 列の一覧は完全にカスタマイズ可能で、ページに表示されるマシンの数もカスタマイズ可能です。
 +
 image::module-05-virt-acm/22-virtual_machine_list.png[title="Virtual Machine List", link=self, window=blank, width=100%]
 +
-. The *Launch links* button provides you with shortcut links that open a new tab to either the virtual machine details page, the virtual machine console, or the observability metrics, all from one easy access point.
+. *Launch links* ボタンを使用すると、仮想マシンの詳細ページ、仮想マシン コンソール、または観測可能性メトリックのいずれかへの新しいタブを開くショートカット リンクが提供されます。これらはすべて 1 つの簡単なアクセス ポイントからアクセスできます。
 +
 image::module-05-virt-acm/23-launch_links.png[title="Launch Links", link=self, window=blank, width=100%]
 +
-. While clicking the *Virtual machine details* link from *Launch links* opens the VM management in a new tab, if you had to manipulate a number of VMs quickly it would be much nicer to do it directly from RHACM.
-. You can do exactly that by clicking on the 3-dot menu on the right side of each VM, and you will see the list that appears is almost exactly the same as the actions list you see on the *Virtual machine details* page.
-. You can use this menu to stop/start/restart a VM, take a snapshot, or edit the machine's definition via YAML.
+. *Launch links* から *Virtual machine details* リンクをクリックすると、新しいタブで仮想マシン管理が開きますが、多数の仮想マシンを素早く操作する必要がある場合は、RHACM から直接操作する方がはるかに便利です。
+. 各仮想マシンの右側にある 3 点メニューをクリックすると、まさにそれが実行できます。表示されるリストは、*Virtual machine details* ページに表示されるアクション リストとほぼ同じです。
+. このメニューを使用して、仮想マシンの停止/起動/再起動、スナップショットの作成、または YAML 経由でマシンの定義の編集を行うことができます。
 +
 image::module-05-virt-acm/24-vm_management.png[title="Virtual Machine Management", link=self, window=blank, width=100%]
 
-== Summary
+== まとめ
 
-In this module we learned how to discover, observe and manage our virtualized workloads using Red Hat Advanced Cluster Managment for Kubernetes (RHACM). The content in this module is just the tip of the iceberg when it comes to what RHACM can do in a multicluster OpenShift Virtualization environment. As mentioned before Ansible automation can be leveraged to perform automated actions across multiple clusters, and powerful tools like GitOps can be leveraged to deploy sets of VMs and ensure that cluster configurations are kept in sync across the entire virtual estate.
+このモジュールでは、Red Hat Advanced Cluster Managment for Kubernetes (RHACM) を使用して仮想化ワークロードを検出、監視、管理する方法を学びました。このモジュールの内容は、マルチクラスタ OpenShift Virtualization 環境で RHACM が実現できることのほんの一部に過ぎません。前述のように、Ansible Automation を活用することで複数のクラスタにまたがる自動アクションを実行できます。また、GitOps などの強力なツールを活用することで、VM セットをデプロイし、仮想環境全体でクラスタ構成の同期を維持できます。
