@@ -1,75 +1,75 @@
 image::conclusion/00_Thank_You.png[link=self, window=blank, width=100%]
 
-We hope you have enjoyed {lab_name} and learning more about *OpenShift Virtualization*, *Ansible Automation Platform* and *Red Hat Advanced Cluster Management for Kubernetes* and how these three tools from Red Hat can be used to manage your virtual machine estate across multiple sites, on a day-to-day basis, in an automated fashion, as well as how to perform some required performance analysis and troubleshooting steps as a virtualization administrator. 
+{lab_name} をお楽しみいただけたでしょうか。*OpenShift Virtualization*、*​​Ansible Automation Platform*、*Red Hat Advanced Cluster Management for Kubernetes* について、また、Red Hat のこれら 3 つのツールを使用して複数のサイトにわたる仮想マシン資産を日常的に自動的に管理する方法、さらに仮想化管理者として必要なパフォーマンス分析とトラブルシューティング手順を実行する方法について学習していただけたことを願っています。
 
 [[key_takeaways]]
-== Key Takeaways
+== 重要なポイント
 
-* OpenShift Virtualization is solution oriented, providing you with a mature, stable, and scalable solution that's easy to get started with.
+* OpenShift Virtualization はソリューション指向であり、成熟度、安定性、拡張性に優れ、導入しやすいソリューションを提供します。
 
-* Ansible Automation Platform is an enterprise tool which provides you with the ability to automate and managed many functions of your virtual machine environment at scale.
+* Ansible Automation Platform は、仮想マシン環境の多くの機能を大規模に自動化および管理できるエンタープライズツールです。
 
-* Red Hat Advanced Cluster Management for Kubernetes helps tackle the challenges faced by larger distributed enterprises by presenting administrators with a single pane of glass from which to manage their whole virtual estate.
+* Red Hat Advanced Cluster Management for Kubernetes は、管理者に仮想環境全体を一元管理できる単一の画面を提供することで、大規模な分散型企業が直面する課題の解決を支援します。
 
 [[additional_info]]
-== Additional Information
+== 追加情報
 
-=== Free Ebook: 15 Reasons to Adopt Red Hat OpenShift Virtualization
+=== 無料電子書籍：Red Hat OpenShift Virtualization を導入すべき15の理由
 
-* Discover how virtualization infrastruture continues to evolve.
-* Explore options for migration of your existing virtual machines.
-* Take advantage of a large number of benefits across your organization.
-* Learn about deploying a consistent foundation for innovation.
-* Learn how to get started through no cost demonstrations or a Virtual Migration Assessment.
+* 仮想化インフラストラクチャがどのように進化し続けているのかをご確認ください。
+* 既存の仮想マシンの移行オプションをご確認ください。
+* 組織全体で数多くのメリットを享受いただけます。
+* イノベーションのための一貫した基盤の導入についてご確認ください。
+* 無料のデモや仮想移行アセスメントを通じて、導入方法をご確認ください。
 
-Click the link https://www.redhat.com/en/resources/15-reasons-adopt-openshift-virtualization-ebook[here^] to read it now.
-
-
-=== Free Ebook: Red Hat Ansible Automation Platform: A Beginners Guide
-
-* Take a brief look at Ansible Automation Platform.
-* Explore the business value of integrateing automation into your organization.
-* Learn about how Ansible Automation Platform works with various partners.
-* Explore strategies for the adoption of automated workflows.
-
-Click the link https://www.redhat.com/en/resources/ansible-automation-platform-beginners-guide-ebook[here^] to read it now.
+今すぐ読むには、 https://www.redhat.com/en/resources/15-reasons-adopt-openshift-virtualization-ebook[こちら^] のリンクをクリックしてください。
 
 
-=== Red Hat Learning Services: DO317 Managing Virtual Machines with Red Hat OpenShift Virtualization
+=== 無料電子書籍：Red Hat Ansible Automation Platform：初心者向けガイド
 
-* Skills required to create, access, and manage VMs on OpenShift clusters.
-* Skills required to control usage and access of cpu, memory, storage, and networking resources from VMs using the same Kubernetes features that would also control usage and access to these resources for containers.
-* Sample architectures to manage High Availability (HA) of VMs using standard Kubernetes features and extensions from OpenShift Virtualization.
-* Strategies to connect VMs on OpenShift to data center services outside of their OpenShift cluster, such as storage and databases.
-* Strategies to migrate VMs from compatible hypervisors to OpenShift Virtualization by using the Migration Toolkit for Virtualization operator.
+* Ansible Automation Platform の概要をご紹介します。
+* 組織に自動化を統合することによるビジネス価値について考察します。
+* Ansible Automation Platform が様々なパートナーとどのように連携するかを学びます。
+* 自動化ワークフローの導入戦略について考察します。
 
-Click the link https://www.redhat.com/en/services/training/managing-virtual-machines-red-hat-openshift-virtualization-exam[here^] to check it out.
+今すぐ読むには、 https://www.redhat.com/en/resources/ansible-automation-platform-beginners-guide-ebook[こちら^] のリンクをクリックしてください。
 
-=== Red Hat Learning Services: AU374 Developing Advanced Auotmation with Red Hat Ansible Automation Platform
 
-* Leverage capabilities of the automation content navigator to develop Ansible Playbooks.
-* Apply recommended practices for effective and efficient automation with Ansible.
-* Use advanced features of Red Hat Ansible Automation Platform to work with data, including filters and plugins.
-* Perform automation operations as rolling updates.
-* Create automation execution environments to bundle and distribute the dependencies needed to run automation code.
+=== Red Hat ラーニングサービス: DO317 Red Hat OpenShift Virtualization を使用した仮想マシンの管理
 
-Click the link https://www.redhat.com/en/services/training/au374-developing-advanced-automation-red-hat-ansible-automation-platform[here^] to check it out.
+* OpenShift クラスター上での VM の作成、アクセス、管理に必要なスキル。
+* コンテナのリソース使用とアクセスを制御するのと同じ Kubernetes 機能を使用して、VM からの CPU、メモリ、ストレージ、ネットワークリソースの使用とアクセスを制御するために必要なスキル。
+* Kubernetes の標準機能と OpenShift Virtualization の拡張機能を使用して、VM の高可用性 (HA) を管理するためのサンプルアーキテクチャ。
+* OpenShift 上の VM を、ストレージやデータベースなど、OpenShift クラスター外部のデータセンターサービスに接続するための戦略。
+* Migration Toolkit for Virtualization オペレーターを使用して、互換性のあるハイパーバイザーから OpenShift Virtualization に VM を移行するための戦略。
 
-=== Red Hat Learning Services: AU480 Multicluster Management with Red Hat OpenShift Platform Plus
+https://www.redhat.com/en/services/training/managing-virtual-machines-red-hat-openshift-virtualization-exam[こちら^] をクリックして確認してください。
 
-* Deploy RHACM in a hub cluster and use it to discover other clusters.
-* Define and apply cluster configuration policies, and detect and remediate non-coforming configurations.
-* Identify and compare applicaiton placement policies and resource utilization on multiple clusters.
-* Deploy Red Hat Quay and Red Hat Advanced Cluster Security for Kubernetes in the hub cluster.
-* Integrate all of these tools in workflows to uncover the power of OpenShift Platform Plus.
+=== Red Hat ラーニングサービス：AU374 Red Hat Ansible Automation Platform を使用した高度な自動化の開発
 
-Click the link https://www.redhat.com/en/services/training/do480-multicluster-management-red-hat-openshift-platform-plus[here^] to check it out.
+* 自動化コンテンツナビゲーターの機能を活用して、Ansible Playbook を開発します。
+* Ansible を使用した効果的かつ効率的な自動化のための推奨プラクティスを適用します。
+* フィルターやプラグインなどの Red Hat Ansible Automation Platform の高度な機能を使用して、データを操作します。
+* 自動化操作をローリングアップデートとして実行します。
+* 自動化コードの実行に必要な依存関係をバンドルおよび配布するための自動化実行環境を作成します。
 
-=== Multi-cluster Red Hat OpenShift Virtualization with Red Hat Advanced Cluster Management
+https://www.redhat.com/en/services/training/au374-developing-advanced-automation-red-hat-ansible-automation-platform[こちら^] をクリックして確認してください。
 
-* A technology overview about the Red Hat products used to deploy the solution.
-* A review of the benefits to be realized by deploying OpenShift Virtualization in a multi-cluster footprint.
-* Reference solution architecture and opinionated design for the deployment of a multi-cluster solution.
-* Sample deployment and management workflows using Ansible Automation Platform to automate various administrative tasks.
+=== Red Hat ラーニングサービス：AU480 Red Hat OpenShift Platform Plus を使用したマルチクラスタ管理
 
-Click https://access.redhat.com/articles/7122874[here^] to check it out. 
+* ハブクラスタに RHACM をデプロイし、他のクラスタを検出します。
+* クラスタ構成ポリシーを定義および適用し、不適合な構成を検出して修正します。
+* 複数のクラスタにおけるアプリケーション配置ポリシーとリソース使用率を特定し、比較します。
+* ハブクラスタに Red Hat Quay と Red Hat Advanced Cluster Security for Kubernetes をデプロイします。
+* これらのツールをすべてワークフローに統合し、OpenShift Platform Plus のパワーを最大限に引き出します。
+
+https://www.redhat.com/en/services/training/do480-multicluster-management-red-hat-openshift-platform-plus[こちら^] をクリックして確認してください。
+
+=== マルチクラスタ Red Hat OpenShift Virtualization と Red Hat Advanced Cluster Management
+
+* ソリューションの導入に使用した Red Hat 製品の技術概要。
+* マルチクラスタ環境に OpenShift Virtualization を導入することで実現できるメリットの概要。
+* マルチクラスタソリューションの導入に向けたリファレンスソリューションアーキテクチャと独自の設計。
+* Ansible Automation Platform を使用した、様々な管理タスクを自動化する導入および管理ワークフローのサンプル。
+
+https://access.redhat.com/articles/7122874[こちら^] をクリックして確認してください。
