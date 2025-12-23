@@ -22,7 +22,7 @@ image::conclusion/00_Thank_You.png[link=self, window=blank, width=100%]
 * イノベーションのための一貫した基盤の導入についてご確認ください。
 * 無料のデモや仮想移行アセスメントを通じて、導入方法をご確認ください。
 
-今すぐ読むには、https://www.redhat.com/en/resources/15-reasons-adopt-openshift-virtualization-ebook[ここ^]のリンクをクリックしてください。
+今すぐ読むには、 https://www.redhat.com/en/resources/15-reasons-adopt-openshift-virtualization-ebook[こちら^] のリンクをクリックしてください。
 
 
 === 無料電子書籍：Red Hat Ansible Automation Platform：初心者向けガイド
@@ -32,7 +32,7 @@ image::conclusion/00_Thank_You.png[link=self, window=blank, width=100%]
 * Ansible Automation Platform が様々なパートナーとどのように連携するかを学びます。
 * 自動化ワークフローの導入戦略について考察します。
 
-今すぐ読むには、https://www.redhat.com/en/resources/ansible-automation-platform-beginners-guide-ebook[ここ^]のリンクをクリックしてください。
+今すぐ読むには、 https://www.redhat.com/en/resources/ansible-automation-platform-beginners-guide-ebook[こちら^] のリンクをクリックしてください。
 
 
 === Red Hat ラーニングサービス: DO317 Red Hat OpenShift Virtualization を使用した仮想マシンの管理
@@ -43,7 +43,7 @@ image::conclusion/00_Thank_You.png[link=self, window=blank, width=100%]
 * OpenShift 上の VM を、ストレージやデータベースなど、OpenShift クラスター外部のデータセンターサービスに接続するための戦略。
 * Migration Toolkit for Virtualization オペレーターを使用して、互換性のあるハイパーバイザーから OpenShift Virtualization に VM を移行するための戦略。
 
-https://www.redhat.com/en/services/training/managing-virtual-machines-red-hat-openshift-virtualization-exam[ここ^]をクリックして確認してください。
+https://www.redhat.com/en/services/training/managing-virtual-machines-red-hat-openshift-virtualization-exam[こちら^] をクリックして確認してください。
 
 === Red Hat ラーニングサービス：AU374 Red Hat Ansible Automation Platform を使用した高度な自動化の開発
 
@@ -53,7 +53,7 @@ https://www.redhat.com/en/services/training/managing-virtual-machines-red-hat-op
 * 自動化操作をローリングアップデートとして実行します。
 * 自動化コードの実行に必要な依存関係をバンドルおよび配布するための自動化実行環境を作成します。
 
-https://www.redhat.com/en/services/training/au374-developing-advanced-automation-red-hat-ansible-automation-platform[ここ^]をクリックして確認してください。
+https://www.redhat.com/en/services/training/au374-developing-advanced-automation-red-hat-ansible-automation-platform[こちら^] をクリックして確認してください。
 
 === Red Hat ラーニングサービス：AU480 Red Hat OpenShift Platform Plus を使用したマルチクラスタ管理
 
@@ -63,7 +63,7 @@ https://www.redhat.com/en/services/training/au374-developing-advanced-automation
 * ハブクラスタに Red Hat Quay と Red Hat Advanced Cluster Security for Kubernetes をデプロイします。
 * これらのツールをすべてワークフローに統合し、OpenShift Platform Plus のパワーを最大限に引き出します。
 
-https://www.redhat.com/en/services/training/do480-multicluster-management-red-hat-openshift-platform-plus[ここ^]をクリックして確認してください。
+https://www.redhat.com/en/services/training/do480-multicluster-management-red-hat-openshift-platform-plus[こちら^] をクリックして確認してください。
 
 === マルチクラスタ Red Hat OpenShift Virtualization と Red Hat Advanced Cluster Management
 
@@ -72,4 +72,4 @@ https://www.redhat.com/en/services/training/do480-multicluster-management-red-ha
 * マルチクラスタソリューションの導入に向けたリファレンスソリューションアーキテクチャと独自の設計。
 * Ansible Automation Platform を使用した、様々な管理タスクを自動化する導入および管理ワークフローのサンプル。
 
-https://access.redhat.com/articles/7122874[ここ^] をクリックして確認してください。
+https://access.redhat.com/articles/7122874[こちら^] をクリックして確認してください。
