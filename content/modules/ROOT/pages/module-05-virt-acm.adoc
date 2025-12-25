@@ -9,7 +9,7 @@ Legacy Systems Inc. は事業拡大を続けており、重要な仮想マシン
 
 NOTE: このラボのセクションでは、共有 ACM ハブクラスターを使用します。コンソール URL はラボ監督者から提供されます。ワークステーション インターフェースにログインすると、ユーザー アカウント（user1 - user**n**）が割り当てられます。このユーザーでログインし、このラボを完了してください。
 
-. ラボ ユーザー アカウントに割り当てられた資格情報を使用して、共有 Red Hat Advanced Cluster Managment (RHACM) ハブのコンソールにログインします。
+. ラボ ユーザー アカウントに割り当てられた認証情報を使用して、共有 Red Hat Advanced Cluster Managment (RHACM) ハブのコンソールにログインします。
 +
 image::module-05-virt-acm/00-openshift_login.png[title="OpenShift Login", link=self, window=blank, width=100%]
 +
@@ -29,7 +29,7 @@ image::module-05-virt-acm/01a-import_cluster_alt.png[title="Import Cluster Alt",
 +
 image::module-05-virt-acm/02-import_cluster_details.png[title="Import Cluster Details", link=self, window=blank, width=100%]
 +
-. *Import mode* を選択すると、クラスターを検出するための *Server URL* と *API Token* の入力を求められます。クラスターを検出するには、元のクラスターからこれらの値を取得する必要があります。
+. *Import mode* を選択し、ドロップダウンから Enter your server URL adn API token for the existing cluster を選ぶと、クラスターを検出するための *Server URL* と *API Token* の入力を求められます。クラスターを検出するには、元のクラスターからこれらの値を取得する必要があります。
 . 元のラボクラスターを開いたタブに戻り、上部の *admin* ユーザーをクリックして、ドロップダウンメニューから *Copy login command* オプションを選択します。
 
 +
@@ -64,7 +64,7 @@ image::module-05-virt-acm/08-import_cluster_review.png[title="Import Cluster Rev
 +
 image::module-05-virt-acm/09-import_in_progress.png[title="Import In Progress", link=self, window=blank, width=100%]
 +
-. クラスターのインポート プロセスが完了すると、クラスターのステータスが *Ready* として表示され、クラスターの *Infrastructure* タイプ、現在サブスクライブされているソフトウェア *Channel*、*クCluster set*、コンソールを直接開くためのリンク、クラスターの説明に使用される *Labels* のリストなど、クラスターに関する大量の情報が表示されます。
+. クラスターのインポート プロセスが完了すると、クラスターのステータスが *Ready* として表示され、クラスターの *Infrastructure* タイプ、現在サブスクライブされているソフトウェア *Channel*、*Cluster set*、コンソールを直接開くためのリンク、クラスターの説明に使用される *Labels* のリストなど、クラスターに関する大量の情報が表示されます。
 +
 image::module-05-virt-acm/10-import_complete.png[title="Import Complete", link=self, window=blank, width=100%]
 
@@ -82,7 +82,7 @@ image::module-05-virt-acm/11-node_list.png[title="Node List", link=self, window=
 +
 image::module-05-virt-acm/12-node_3_details.png[title="Node 3 Details", link=self, window=blank, width=100%]
 +
-. このウィンドウを閉じると、ページ上部の *Grafana* リンクをクリックすることで、マネージドクラスタで収集されたグラフを見ることができます。リンクをクリックしてください。
+. このウィンドウを閉じて、ページ上部の *Grafana* リンクをクリックすることで、マネージドクラスタで収集されたグラフを見ることができます。リンクをクリックしてください。
 +
 image::module-05-virt-acm/13-grafana_link.png[title="Grafana Link", link=self, window=blank, width=100%]
 +
@@ -130,7 +130,7 @@ NOTE: Grafanaを起動したタブを閉じて、RHACMコンソールに戻る�
 
 . 左側のメニューから、*Infrastructure* をクリックし、次に *Virtual machines* をクリックします。
 +
-image::module-05-virt-acm/21-infrastructure_vms.png[title="Left Side Menu", link=self, window=blank, width=100%]
+image::module-05-virt-acm/21-infrastructure-vms.png[title="Left Side Menu", link=self, window=blank, width=100%]
 +
 . RHACM が現在認識できるすべての仮想マシンの一覧ページが表示されます。
 . 表示される列は、*Name*、*Cluster*、*ネームスペース*、または *Node* で特定の仮想マシンを並べ替えたり識別したりするのに役立ちます。
@@ -138,7 +138,7 @@ image::module-05-virt-acm/21-infrastructure_vms.png[title="Left Side Menu", link
 +
 image::module-05-virt-acm/22-virtual_machine_list.png[title="Virtual Machine List", link=self, window=blank, width=100%]
 +
-. *Launch links* ボタンを使用すると、仮想マシンの詳細ページ、仮想マシン コンソール、または観測可能性メトリックのいずれかへの新しいタブを開くショートカット リンクが提供されます。これらはすべて 1 つの簡単なアクセス ポイントからアクセスできます。
+. *Launch links* ボタンを使用すると、仮想マシンの詳細ページ、仮想マシン コンソール、または Observability メトリックのいずれかへの新しいタブを開くショートカット リンクが提供されます。これらはすべて 1 つの簡単なアクセス ポイントからアクセスできます。
 +
 image::module-05-virt-acm/23-launch_links.png[title="Launch Links", link=self, window=blank, width=100%]
 +
