@@ -20,7 +20,7 @@ image::module-01-perf-scale-ts/00-htpasswd_login.png[title="OpenShift Authentica
 
 image::module-01-perf-scale-ts/01-openshift_login.png[title="OpenShift Login", link=self, window=blank, width=100%]
 
-NOTE: 本コースでは、Webコンソールのメニューが英語表記となっています。メニューを英語表記にするために次のことを実施してください。Webコンソール画面右上のユーザ名をクリックして [ユーザー設定] のメニューを開きます。次に表示される画面で [言語] メニューを選択すると、「Use the default browser language setting.」のチェックボックスにチェックが入っています。このチェックボックスのチェックを外し、[言語の設定] のドロップダウンリストから、[English] を選択します。最後にブラウザで再読み込みすると、英語のWebコンソールが表示されます。
+NOTE: 本コースでは、Webコンソールのメニューが英語表記となっています。メニューを英語表記にするために次のことを実施してください。Webコンソール画面右上のユーザ名をクリックして [ユーザー設定] のメニューを開きます。次に表示される画面で [言語] メニューを選択すると、「デフォルトのブラウザー言語設定を使用します。」のチェックボックスにチェックが入っています。このチェックボックスのチェックを外し、[言語の設定] のドロップダウンリストから、[English] を選択します。最後にブラウザで再読み込みすると、英語のWebコンソールが表示されます。
 
 [[alerts_graphs_logs]]
 == アラート、グラフ、ログの有効化と調査
@@ -41,7 +41,7 @@ image::module-01-perf-scale-ts/02-node_list.png[title="Nodes", link=self, window
 +
 . クラスター内のワーカーノード 5 をクリックします。*Node details* ページが開き、ノードの詳細情報を確認できます。
 . このページでは、画面上部の中央にノードによって生成されたアラートが表示され、画面下部の中央に CPU、メモリ、ストレージ、ネットワークスループットのグラフが表示され、ノードの使用状況を視覚的に把握できます。
-. 使用率パネルの右上にあるドロップダウンをクリックすると、これらのグラフの表示期間を 1 時間、6 時間、または 24 時間に変更できます。
+. Utilizationパネルの右上にあるドロップダウンをクリックすると、これらのグラフの表示期間を 1 時間、6 時間、または 24 時間に変更できます。
 +
 image::module-01-perf-scale-ts/03-node_example.png[title="Node Details", link=self, window=blank, width=100%]
 +
@@ -61,7 +61,7 @@ NOTE: ラボのこの部分では、アプリケーションを使用して一�
 +
 image::module-01-perf-scale-ts/04-select_loadmaker.png[title="Loadmaker Deployment", link=self, window=blank, width=100%]
 +
-*loadmaker* をクリックすると、*Deployment details* ページが表示されます。
+. *loadmaker* をクリックすると、*Deployment details* ページが表示されます。
 +
 image::module-01-perf-scale-ts/05-deploy_details.png[title="Deployment Details", link=self, window=blank, width=100%]
 +
@@ -76,7 +76,7 @@ image::module-01-perf-scale-ts/07-webapp_vms.png[title="WebApp VMs", link=self, 
 +
 IMPORTANT: この時点では、ラボでは *database* と *winweb01* のみが電源オンになっているはずです。もしオフになっている場合は、今すぐ電源オンにしてください。*winweb02* は今のところ電源オンにしないでください。
 +
-. 仮想マシンが起動したら、*winweb01* をクリックします。すると*VirtualMachine details* ページが表示されます。
+. 仮想マシンが起動したら、*winweb01* をクリックします。すると .*VirtualMachine details* ページが表示されます。
 . このページには *Utilization* セクションがあり、以下の情報が表示されます。
 
   * 15 秒ごとに更新される VM リソース (CPU、メモリ、ストレージ、ネットワーク転送) の基本ステータス。
@@ -104,7 +104,7 @@ image::module-01-perf-scale-ts/12-change_refresh.png[title="Change Refresh Inter
 +
 image::module-01-perf-scale-ts/13-add_query.png[title="Add_Query", link=self, window=blank, width=100%]
 +
-. 練習として、IO/待機ステータスで費やされたvCPU時間を表示するカスタムクエリを追加してみましょう。
+. 練習として、IO/wait ステータスで費やされたvCPU時間を表示するカスタムクエリを追加してみましょう。
 . *Add Query* ボタンをクリックし、表示される新しい行に次のクエリを貼り付けます。
 +
 [source,sh,role=execute]
@@ -149,7 +149,7 @@ winweb01、winweb02、およびデータベースサーバーは連携して、2
 +
 image::module-01-perf-scale-ts/23-vm_details.png[title="VM Details", link=self, window=blank, width=100%]
 +
-. *metrics* タブをクリックして、CPU 使用率のグラフを簡単に確認すると、最大値になっているはずです。
+. *Metrics* タブをクリックして、CPU 使用率のグラフを簡単に確認すると、最大値になっているはずです。
 +
 image::module-01-perf-scale-ts/24-vm_metrics.png[title="VM Metrics", link=self, window=blank, width=100%]
 +
@@ -223,7 +223,7 @@ NOTE: 実際の値がグラフに反映されるまでには時間がかかる�
 image::module-01-perf-scale-ts/35-updated_usage_verify.png[title="Verify Metrics", link=self, window=blank, width=100%]
 
 [[swap_mem]]
-== Swap/Memory オーバーコミットについて
+== スワップ/メモリ オーバーコミットについて
 
 NOTE: このラボのセクションでは、物理クラスターリソースが不足している状況で何ができるかについて解説します。*以下の情報をお読みください。*
 
@@ -242,7 +242,7 @@ NOTE: このラボのセクションでは、物理クラスターリソース�
 
 OpenShift クラスターでは、物理リソースが不足した場合の主な解決策は、ワーカーノードを追加してクラスターをスケールすることです。これにより、失敗しているワークロードや割り当てられないワークロードを正常に割り当てできるようになります。ラボのこのセクションでは、この考え方に焦点を当て、クラスターに過負荷をかけた後、新しいノードを追加してすべての VM が正常に実行できるようにします。
 
-注: このラボ環境では、実際に物理ノードを追加するのではなく、VM ワークロードを許可しないテイントを付与したスタンバイ状態のノードを用意することで、動作をシミュレートしています。適切なタイミングでこのテイントを削除し、クラスターへの新しいノードの追加をシミュレートします。
+NOTE: このラボ環境では、実際に物理ノードを追加するのではなく、VM ワークロードを許可しないテイントを付与したスタンバイ状態のノードを用意することで、動作をシミュレートしています。適切なタイミングでこのテイントを削除し、クラスターへの新しいノードの追加をシミュレートします。
 
 . 左側のナビゲーション メニューで、*Virtualization* をクリックし、次に *VirtualMachines* をクリックします。
 . *vms-aap-day2* プロジェクトと *webapp-vms* プロジェクト内のすべての VM がパワーオンになっていることを確認します。
@@ -317,7 +317,7 @@ image::module-01-perf-scale-ts/51-vms_on_nodes.png[title="VMs On Nodes", link=se
 
 この問題を解決するために、OpenShift Virtualization で活用できるもう 1 つの機能は、Kube Descheduler オペレーターを使用して、利用可能なワーカーノード間で仮想化ワークロードを再分散することです。
 
-このセクションでは、クラスターがオーバープロビジョニングされることなく、アイドル状態のノードをもう 1 つ導入することで、OpenShift の負荷認識型再分散機能について説明します。また、仮想マシンに負荷をかけることで、クラスターが自動的にワークロードを再分散するようにします。
+このセクションでは、クラスターがオーバープロビジョニングされることなく、アイドル状態のノードをもう 1 つ導入することで、OpenShift のLoad-aware rebalancing機能について説明します。また、仮想マシンに負荷をかけることで、クラスターが自動的にワークロードを再分散するようにします。
 
 NOTE: このクラスターでは Load-aware rebalancing がすでに設定されていますが、これは機能が実際にどのように動作するかを確認するための単なる演習です。
 
@@ -355,7 +355,7 @@ image::module-01-perf-scale-ts/53-node_7_details.png[title="Node 7 Details", lin
 +
 image::module-01-perf-scale-ts/54-node_7_taint.png[title="Node 7 Taint", link=self, window=blank, width=100%]
 +
-. ポップアップウィンドウで、*minus* 記号をクリックしてtaintを削除し、*Save* ボタンをクリックします。
+. ポップアップウィンドウで、*-* 記号をクリックしてtaintを削除し、*Save* ボタンをクリックします。
 +
 image::module-01-perf-scale-ts/55-node_7_taint_window.png[title="Remove Taint Window", link=self, window=blank, width=100%]
 +
