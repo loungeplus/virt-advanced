@@ -15,7 +15,7 @@
 +
 image::module-03-adv-net-sec/01-view_vm.png[title="View VM", link=self, window=blank, width=100%]
 +
-. *Console*  タブをクリックし、提供された資格情報と組み込みのcopy/paste機能を使用して認証してVMにログインします。
+. *Console*  タブをクリックし、提供された認証と組み込みのcopy/paste機能を使用して認証してVMにログインします。
 +
 image::module-03-adv-net-sec/02-login_vm.png[title="Login to VM", link=self, window=blank, width=100%]
 +
@@ -42,7 +42,7 @@ NOTE: ポッド名はランダムに生成されるため、上記のスクリ�
 +
 image::module-03-adv-net-sec/05-pod_details.png[title="Edit Pod Details", link=self, window=blank, width=100%]
 +
-. *Edit labels* ウィンドウが表示されたら、中央のボックスをクリックして `app=network-policy-deny` のラベルを追加し、*Enter* キーを押してコミットしてから、*保存**Save* ボタンをクリックします。
+. *Edit labels* ウィンドウが表示されたら、中央のボックスをクリックして `app=network-policy-deny` のラベルを追加し、*Enter* キーを押してコミットしてから、*Save* ボタンをクリックします。
 +
 image::module-03-adv-net-sec/06-pod_labels.png[title="Edit Pod Labels", link=self, window=blank, width=100%]
 +
@@ -74,7 +74,7 @@ image::module-03-adv-net-sec/09-affected_pods.png[title="Affected Pods", link=se
 . 仮想マシン *rhel9-vm1* のコンソールに戻り、ポリシーをテストします。
 . 左側のナビゲーションメニューで、*Virtualization* をクリックし、次に *VirtualMachines* をクリックして、中央の列から *rhel9-vm1* を選択します。
 . 仮想マシンの *Console* タブをクリックします。以前と同じようにログインした状態になっているはずです。
-. 次の構文をコピーして貼り付け、新しいネットワークポリシーをテストします。
+. 次のコマンドを実行して、新しいネットワークポリシーをテストします。
 +
 [source,sh,role=execute]
 ----
@@ -84,7 +84,7 @@ ping www.google.com
 image::module-03-adv-net-sec/10-ping_site_deny.png[title="Egress Blocked", link=self, window=blank, width=100%]
 +
 . クラスターからの出力は、DNS ルックアップを含めて完全にブロックされます。
-. この演習を完了したら、*Networking* と *NetworkPolicies* に戻り、右側の 3 つのドットのメニューを使用して *ping-egress-deny* ポリシーを削除し、ポップアップ ボックスで確認します。
+. この演習を完了したら、*Networking* と *NetworkPolicies* に戻り、右側の 3 つのドットのメニューを使用して *ping-egress-deny* ポリシーを削除します。ポップアップが表示されるので、*delete* をクリックします。
 +
 image::module-03-adv-net-sec/11-delete_policy.png[title="Delete Policy", link=self, window=blank, width=100%]
 
@@ -95,7 +95,7 @@ image::module-03-adv-net-sec/11-delete_policy.png[title="Delete Policy", link=se
 
 NOTE: このセクションでは、UDN（User Defined Networks）を利用し、開発、テスト、本番の3つのネームスペースを設定して、各ネームスペースで定義されたリソース間のネットワークトラフィックを制限します。現在、ネームスペースでプライマリUDN機能を使用するには、作成時にデフォルトのクラスターネットワーク設定をオーバーライドできる特別なラベルを適用する必要があります。
 
-=== CUDN対応ネームスペースを作成する
+=== UDN対応ネームスペースを作成する
 
 . OpenShift コンソールから、*Administration* をクリックし、次に *Namespaces* をクリックして、隅にある *Create Namespace* ボタンをクリックします。
 +
@@ -117,7 +117,7 @@ image::module-03-adv-net-sec/14-namespace_details.png[title="Namespace Details",
 +
 image::module-03-adv-net-sec/15-create_udn.png[title="Create UDN", link=self, window=blank, width=100%]
 +
-. 表示されるダイアログボックスにはプロジェクト名が既に定義されているので、使用したいサブネットを入力するだけです。*dev* プロジェクトのボックスに `192.168.*253*.0/24` と入力し、*Create*ボタンをクリックします。
+. 表示されるダイアログボックスにはプロジェクト名が既に定義されているので、使用したいサブネットを入力するだけです。*dev* プロジェクトのボックスに `192.168.*253*.0/24` と入力し、*Create* ボタンをクリックします。
 +
 image::module-03-adv-net-sec/16-create_udn_dialog.png[title="Create UDN Dialog", link=self, window=blank, width=100%]
 +
@@ -134,11 +134,11 @@ image::module-03-adv-net-sec/18-udn_list.png[title="UDN List", link=self, window
 
 ネームスペースを定義し、UDN を作成したので、接続をテストするための仮想マシンをいくつか作成して、それらを実践する必要があります。
 
-. *Virtualization* と* Catalog* をクリックします。*dev* プロジェクトにいることを確認し、*Fedora VM* テンプレートのタイルを選択します。
+. *Virtualization* と *Catalog* をクリックします。*dev* プロジェクトにいることを確認し、*Fedora VM* テンプレートのタイルを選択します。
 +
 image::module-03-adv-net-sec/19-vm_catalog.png[title="VM Catalog", link=self, window=blank, width=100%]
 +
-. クリックすると、*Fedora VM* ダイアログが表示されます。VM テンプレートには、デフォルトで OpenShift ポッドネットワークに接続されていると表示されていますが、ネームスペースに付けたラベルにより、デフォルトで UDN を使用するように設定されていることに注意してください。最初の VM に `fedora-dev01` という名前を付け、*Quick create VirtualMachine* ボタンをクリックします。
+. クリックすると、*Fedora VM* ダイアログが表示されます。VM テンプレートには、デフォルトで OpenShift Podネットワークに接続されていると表示されていますが、ネームスペースに付けたラベルにより、デフォルトで UDN を使用するように設定されていることに注意してください。最初の VM に `fedora-dev01` という名前を付け、*Quick create VirtualMachine* ボタンをクリックします。
 +
 image::module-03-adv-net-sec/20-create_vm_dialog.png[title="Create VM Dialog", link=self, window=blank, width=100%]
 +
@@ -156,7 +156,7 @@ image::module-03-adv-net-sec/21-dev-vms.png[title="Dev VMs", link=self, window=b
 +
 image::module-03-adv-net-sec/22-fedora-dev01.png[title="Fedora-Dev01 Details", link=self, window=blank, width=100%]
 +
-. 組み込みのCopy/Paste機能を使用して、提供された資格情報でシステムにログインします。
+. 組み込みのCopy/Paste機能を使用して、提供された認証情報でシステムにログインします。
 +
 image::module-03-adv-net-sec/23-console.png[title="Fedora-Dev01 Console", link=self, window=blank, width=100%]
 +
@@ -171,7 +171,7 @@ image::module-03-adv-net-sec/24-ping_success.png[title="Fedora-Dev02 Ping Succes
 +
 image::module-03-adv-net-sec/25-fedora_test_01.png[title="Fedora-Test01", link=self, window=blank, width=100%]
 +
- *fedora-test01* VM の IP アドレスをメモします。
+. *fedora-test01* VM の IP アドレスをメモします。
 . 次に、*fedora-dev01* のコンソールを開いているタブに戻り、この IP アドレスに対して ping を実行します。
 +
 image::module-03-adv-net-sec/26-ping_fail.png[title="Fedora-Test02 Ping Fail", link=self, window=blank, width=100%]
@@ -194,7 +194,7 @@ image::module-03-adv-net-sec/27-net_obsv_arch.png[title="Network Observability O
 +
 image::module-03-adv-net-sec/28-network_traffic_node.png[title="Network Traffic Node", link=self, window=blank, width=100%]
 +
-. 画面を詳しく見ていくと、トラフィックの大部分がワーカーノード間のローカルトラフィックであり、そのほとんどは、先ほどWebアプリケーションへのリクエスト送信時にロードメーカーによって生成されたものであることがわかります。
+. 画面を詳しく見ていくと、トラフィックの大部分がワーカーノード間のローカルトラフィックであり、そのほとんどは、先ほどWebアプリケーションへのリクエスト送信時にloadmakerによって生成されたものであることがわかります。
 . 画面下部のグラフには、ワークロードが積み上げられて合計スループットポイントが表示され、個々のワーカーノードからのピークが下部近くのバーで示されています。
 . ネームスペース、ワークロードオーナー、管理対象リソース別にトラフィックを表示するオプションもあります。それぞれをクリックして、自由にご覧ください。
 +
