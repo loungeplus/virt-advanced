@@ -112,7 +112,7 @@ NOTE: 一例として、*rhcos4-moderate-worker-enable-fips-mode* が挙げら�
 
 . 上記のリストから、監査の要件に従って、次のスキャン結果 *rhcos4-moderate-worker-coreos-pti-kernel-arguments* を修復することを選択します。
 +
-Note: https://bugzilla.redhat.com/show_bug.cgi?id=1519781[Meltdown^] 脆弱性のような攻撃を防ぐために、カーネルとユーザー空間のページ テーブルを分離するには、*rhcos4-moderate-worker-coreos-pti-kernel-argument* が必要です。
+NOTE: https://bugzilla.redhat.com/show_bug.cgi?id=1519781[Meltdown^] 脆弱性のような攻撃を防ぐために、カーネルとユーザー空間のページ テーブルを分離するには、*rhcos4-moderate-worker-coreos-pti-kernel-argument* が必要です。
 +
 *Compliance Remediation* タブをクリックし、*Name* 検索バーに
 `pti-kernel` と入力して、*rhcos4-moderate-worker-coreos-pti-kernel-argument* の推奨修復方法を検索します。結果が表示されたら、右側の3点メニューをクリックし、表示されるメニューから *Edit ComplianceRemediation* を選択します。
@@ -169,7 +169,7 @@ image::module-02-sec-comp/23-check_status_pass.png[title="Check Status Pass", li
 
 
 [[cluster_rbac]]
-== Cクラスターロールに対するロールベースアクセス制御の設定
+== クラスターロールに対するロールベースアクセス制御の設定
 
 OpenShift が標準の Kubernetes と比較して特に優れている点の一つは、ユーザーアカウントとクラスターロールを個別に管理できる豊富なロールベースアクセス制御です。これらのロールベースアクセス制御により、クラスターにログインした各ユーザーが実行できる操作を定義できます。このモジュールのこのセクションでは、監査担当者用の読み取り専用アカウントを作成し、そのアカウントに適用される制限事項について説明します。
 
@@ -205,7 +205,7 @@ image::module-02-sec-comp/28-create_binding.png[title="Create Binding", link=sel
 +
 image::module-02-sec-comp/29-role_binding_details.png[title="RoleBinding Details", link=self, window=blank, width=100%]
 
-=== ユーザーアカウントを作成します
+=== ユーザーアカウントを作成する
 
 . ロールバインディングが作成されたので、2つの監査アカウントをグループに追加する必要があります。
 . 左側のメニューで、*Administration* と *CustomResourceDefinitions* をクリックし、検索バーで *OAuth* エントリを探します。見つかったらクリックします。

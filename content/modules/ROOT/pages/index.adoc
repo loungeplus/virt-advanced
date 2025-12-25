@@ -15,7 +15,7 @@ VMを移行し、一貫性のあるアプリケーションプラットフォー
 
 == 含まれる Red Hat 製品
 
-*OpenShift Virtualization* を使用すると、Kubernetes ベースの最新インフラストラクチャに仮想マシンを導入できます。新規アプリケーションの開発と配信、既存アプリケーションのモダナイゼーションが可能になり、仮想マシン、コンテナ、サーバーレス機能で構成されるアプリケーションを作成できます。これらはすべて、Kubernetes ネイティブのツールとパラダイムを使用して一括管理されます。
+*OpenShift Virtualization* を使用すると、Kubernetes ベースの最新インフラストラクチャに仮想マシンを導入できます。新規アプリケーションの開発とデリバリー、既存アプリケーションのモダナイゼーションが可能になり、仮想マシン、コンテナ、サーバーレス機能で構成されるアプリケーションを作成できます。これらはすべて、Kubernetes ネイティブのツールとパラダイムを使用して一括管理されます。
 
 *Ansible Automation Platform* を使用すると、プラットフォームエンジニアリングチームと DevOps チームは、物理、クラウド、仮想、エッジ環境全体にわたって自動化を構築、管理、拡張できます。Ansible Automation Platform を使用すると、インフラストラクチャ、ネットワークコンポーネント、アプリケーション、ストレージ、セキュリティ、ITSM などを網羅する自動化ワークフローによって、一貫性とコンプライアンスを確保できます。
 
@@ -55,7 +55,7 @@ OpenShift クラスターコンソールは {openshift_cluster_console_url}[こ�
 * *User:* {openshift_cluster_admin_username}
 * *Password:* {openshift_cluster_admin_password}
 
-Ansible Automation Platform コンソールは {aap_controller_web_url}[ここ^] からご利用いただけます。
+Ansible Automation Platform コンソールは {aap_controller_web_url}[こちら^] からご利用いただけます。
 
 * *User:* {aap_controller_admin_user}
 * *Password* {aap_controller_admin_password}
