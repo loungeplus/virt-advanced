@@ -17,7 +17,6 @@ image::module-04-virt-automation/01-aap_login.png[title="AAP Login", link=self, 
 
 NOTE: Ansible Automation Platform コンソールでは、セキュリティ上の理由から、管理者ユーザーには5分間のタイムアウトが設定されています。誤ってログアウトしてしまった場合は、上記の認証情報を使用して再度ログインできます。
 
-[[OpenShift_Project]]
 == Red Hat OpenShift コンソールの認証情報
 
 OpenShift クラスターコンソールは {openshift_cluster_console_url}[こちら^] からご利用いただけます。
@@ -43,13 +42,13 @@ image::module-01-perf-scale-ts/01-openshift_login.png[title="OpenShift Login", l
 . OpenShift 管理コンソール ウィンドウに切り替えます。
 . 左側のナビゲーション メニューで、*ホーム* をクリックし、次に *プロジェクト* をクリックします。
 +
-image::module-06-virt-automation/01-openshift-project_01.png[title="OpenShift Project", link=self, window=blank, width=100%]
+image::module-06-virt-automation/01-openshift_project_01.png[title="OpenShift Project", link=self, window=blank, width=100%]
 +
 . *プロジェクトの作成* をクリックして、プロジェクト *development* と *staging* を作成します。
 +
-image::module-06-virt-automation/01-openshift-create_project_01.png[title="OpenShift Create development Project", link=self, window=blank, width=100%]
+image::module-06-virt-automation/01-openshift_create_project_01.png[title="OpenShift Create development Project", link=self, window=blank, width=100%]
 +
-image::module-06-virt-automation/01-openshift-create_project_02.png[title="OpenShift Create staging Project", link=self, window=blank, width=100%]
+image::module-06-virt-automation/01-openshift_create_project_02.png[title="OpenShift Create staging Project", link=self, window=blank, width=100%]
 
 [[AAP_Project]]
 === Ansible Automation Platformプロジェクトの作成
@@ -189,7 +188,7 @@ image::module-06-virt-automation/04-create_survey_08.png[title="Create Survey Na
 image::module-06-virt-automation/04-create_survey_09.png[title="3 Survey", link=self, window=blank, width=100%]
 
 
-[[deploy_VM]]
+[[run_template]]
 == Ansible Automation Platform を使用した ジョブテンプレートの実行
 
 . ジョブテンプレートを作成したら、右上の *Launch template(テンプレートの起動)* ボタンを選択してジョブを実行します。
