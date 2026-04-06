@@ -40,7 +40,7 @@ image::module-01-perf-scale-ts/01-openshift_login.png[title="OpenShift Login", l
 === Red Hat OpenShift プロジェクトの作成
 
 . OpenShift 管理コンソール ウィンドウに切り替えます。
-. 左側のナビゲーション メニューで、*ホーム* をクリックし、次に *プロジェクト* をクリックします。
+. 左側のナビゲーション メニューで *ホーム* をクリックし、次に *プロジェクト* をクリックします。
 +
 image::module-06-virt-automation/01-openshift_project_01.png[title="OpenShift Project", link=self, window=blank, width=100%]
 +
@@ -55,11 +55,9 @@ image::module-06-virt-automation/01-openshift_create_project_02.png[title="OpenS
 
 Ansible Automation Platformのプロジェクトは、Ansibleのコード（Playbookやロール）が保管されている場所を定義するものです。
 
-. AP UIダッシュボード内で、左側のメニューから *Automation Execution* のメニューをクリックして展開し、*Project(プロジェクト)* をクリックします、
+. AP UIダッシュボード内で、左側のメニューから *Automation Execution* のメニューをクリックして展開し、*Project(プロジェクト)* をクリックします。*Create Project(プロジェクトの作成)* をクリックします。
 +
 image::module-06-virt-automation/02-create_project_01.png[title="Ansible Project", link=self, window=blank, width=100%]
-+
-. *Create Project(プロジェクトの作成)* をクリックします。
 +
 image::module-06-virt-automation/02-create_project_02.png[title="Create Ansible Project", link=self, window=blank, width=100%]
 +
@@ -72,11 +70,11 @@ image::module-06-virt-automation/02-create_project_02.png[title="Create Ansible 
 
 +
 . 下部の *プロジェクトの作成* をクリックします。
-
++
 image::module-06-virt-automation/02-create_project_03.png[title="Input Ansible Project", link=self, window=blank, width=100%]
-
++
 . *最終ジョブステータス* が *成功* になるまで待ちます。
-
++
 image::module-06-virt-automation/02-create_project_04.png[title="Job Status Success", link=self, window=blank, width=100%]
 
 [[create_template]]
@@ -113,9 +111,12 @@ image::module-06-virt-automation/03-create_template_03.png[title="Input Job Temp
 |===
 +
 
-image::module-06-virt-automation/03-create_template_04.png[title="Input Job Template", link=self, window=blank, width=100%]
-
 . 入力が完了したら、*Create job template(ジョブテンプレートの作成)* ボタンをクリックします。
++
+
+image::module-06-virt-automation/03-create_template_04.png[title="Input Job Template", link=self, window=blank, width=100%]
+. テンプレートが作成されました。
+
 +
 image::module-06-virt-automation/03-create_template_05.png[title="Create Job Template", link=self, window=blank, width=100%]
 +
@@ -165,7 +166,7 @@ image::module-06-virt-automation/04-create_survey_05.png[title="enable Survey", 
 +
 image::module-06-virt-automation/04-create_survey_06.png[title="Create Survey VM name", link=self, window=blank, width=100%]
 +
-. 続けて *create survey question* をクリックして、フォームに次の値を入力します。Multiple Choiceの入力は、値を入力してエンターを押すことで複数登録することができます。先に作成したOpenShiftのプロジェクトを選択肢とします。
+. 続けて *create survey question* をクリックして、フォームに次の値を入力します。Multiple Choiceの入力は、値を入力してエンターを押すことで複数登録することができます。先に作成したOpenShiftのプロジェクト *development* と *staging* を選択肢とします。
 
 +
 |===
@@ -195,7 +196,7 @@ image::module-06-virt-automation/04-create_survey_09.png[title="3 Survey", link=
 +
 image::module-06-virt-automation/05-run_template_01.png[title="Run Template", link=self, window=blank, width=100%]
 +
-. Surveyで作成した質問が表示されるので、適切な値を選択するか、入力します。入力後に * Next* ボタンをクリックします。
+. Surveyで作成した質問が表示されるので、適切な値を選択するか、入力します。入力後に *Next* ボタンをクリックします。
 +
 image::module-06-virt-automation/05-run_template_03.png[title="Input Survey", link=self, window=blank, width=100%]
 +
