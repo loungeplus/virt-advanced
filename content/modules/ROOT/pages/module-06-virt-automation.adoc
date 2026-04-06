@@ -85,7 +85,7 @@ image::module-06-virt-automation/02-create_project_04.png[title="Job Status Succ
 このセクションでは、Ansible Automation Platform ダッシュボードを活用し、VMの作成を行うテンプレートを作成します。
 
 このテンプレートは、OpenShiftのプロジェクト *development* または *staging* に、OSのタイプが *fedora* *rhel9* *rhel10* のいずれかの仮想マシンを任意の名前で作成するものです。
-Playbookは {https://github.com/loungeplus/aap-demos.git}[Github^] にある virt-vm-depoly.yaml を利用します。
+Playbookは https://github.com/loungeplus/aap-demos.git[Github^] にある virt-vm-depoly.yaml を利用します。
 
 . AAP UIダッシュボード内で、左側のメニューから *Automation Execution* に移動し、*Templates(テンプレート)* をクリックします。テンプレート画面で *Create template(テンプレートの作成)* ボタンをクリックし、ドロップダウンメニューから *Create job template(ジョブテンプレートの作成)* を選択します。
 +
@@ -137,7 +137,7 @@ image::module-06-virt-automation/04-create_survey_01.png[title="Create Survey OS
 | Question          | OS type
 | Answer variable name     | target_os_type
 | Answer type    | Multiple Choice(single select)
-| Multiple Choice       | fedora (同様にrhel9 rhel10も選択肢に追加）
+| Multiple Choice       | fedora (同様に rhel9 rhel10 も選択肢に追加）
 |===
 +
 . 入力が正しいことを確認して、下部の *create survey question* をクリックします。
@@ -175,7 +175,7 @@ image::module-06-virt-automation/04-create_survey_06.png[title="Create Survey VM
 | Question          | Namespace
 | Answer variable name     | vm_namespace
 | Answer type    | Multiple Choice(single select)
-| Multiple Choice       | development (同様にstagingも選択肢に追加）
+| Multiple Choice       | development (同様に staging も選択肢に追加）
 |===
 + 
 
@@ -186,7 +186,7 @@ image::module-06-virt-automation/04-create_survey_08.png[title="Create Survey Na
 + 
 . ３つの *survey* が設定されたテンプレートが作成されました。
 + 
-image::module-06-virt-automation/04-create_survey_09.png[title="3 Survey", link=self, window=blank, width=100%]
+image::module-06-virt-automation/04-create_survey_09.png[title="3 Survey Template", link=self, window=blank, width=100%]
 
 
 [[run_template]]
