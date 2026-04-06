@@ -57,11 +57,11 @@ Ansible Automation Platformのプロジェクトは、Ansibleのコード（Play
 
 . AP UIダッシュボード内で、左側のメニューから *Automation Execution* のメニューをクリックして展開し、*Project(プロジェクト)* をクリックします、
 +
-image::module-06-virt-automation/02-openshift_project_01.png[title="Ansible Project", link=self, window=blank, width=100%]
+image::module-06-virt-automation/02-create_project.png[title="Ansible Project", link=self, window=blank, width=100%]
 +
 . *Create Project(プロジェクトの作成)* をクリックします。
 +
-image::module-06-virt-automation/02-openshift_project_02.png[title="Create Ansible Project", link=self, window=blank, width=100%]
+image::module-06-virt-automation/02-create_project_02.png[title="Create Ansible Project", link=self, window=blank, width=100%]
 +
 . *プロジェクトの作成* フォームの次のフィールドに適切な値を入力するか、ドロップダウン メニューから選択します。
    * *Name(名前):* `Auto Deploy VMs`
@@ -73,11 +73,11 @@ image::module-06-virt-automation/02-openshift_project_02.png[title="Create Ansib
 +
 . 下部の *プロジェクトの作成* をクリックします。
 
-image::module-06-virt-automation/02-openshift_project_03.png[title="Input Ansible Project", link=self, window=blank, width=100%]
+image::module-06-virt-automation/02-create_project_03.png[title="Input Ansible Project", link=self, window=blank, width=100%]
 
 . *最終ジョブステータス* が *成功* になるまで待ちます。
 
-image::module-06-virt-automation/02-openshift_project_04.png[title="Job Status Success", link=self, window=blank, width=100%]
+image::module-06-virt-automation/02-create_project_04.png[title="Job Status Success", link=self, window=blank, width=100%]
 
 [[create_template]]
 == テンプレートの作成
@@ -202,7 +202,7 @@ image::module-06-virt-automation/05-run_template_03.png[title="Input Survey", li
 . 変数がセットされていることを確認し、*Finish* ボタンをクリックします。
 
 +
-image::module-06-virt-automation/06-run_template_04.png[title="Finish Template", link=self, window=blank, width=100%]
+image::module-06-virt-automation/05-run_template_04.png[title="Finish Template", link=self, window=blank, width=100%]
 +
 
 . テンプレートが実行され、出力に *成功* と表示されるまで待ちます。
