@@ -57,7 +57,7 @@ Ansible Automation Platformのプロジェクトは、Ansibleのコード（Play
 
 . AP UIダッシュボード内で、左側のメニューから *Automation Execution* のメニューをクリックして展開し、*Project(プロジェクト)* をクリックします、
 +
-image::module-06-virt-automation/02-create_project.png[title="Ansible Project", link=self, window=blank, width=100%]
+image::module-06-virt-automation/02-create_project_01.png[title="Ansible Project", link=self, window=blank, width=100%]
 +
 . *Create Project(プロジェクトの作成)* をクリックします。
 +
