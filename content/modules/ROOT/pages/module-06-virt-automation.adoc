@@ -185,7 +185,8 @@ image::module-06-virt-automation/04-create_survey_00.png[title="Create Survey", 
 +
 image::module-06-virt-automation/04-create_survey_01.png[title="Create Survey OS type 1", link=self, window=blank, width=100%]
 +
-.  フォームにOS typeの選択肢を入力します。Multiple Choiceの入力は、値を入力してエンターを押すことで複数登録することができます。また、ここで指定している値は、OpenShiftコンソールで[Virtualization]-[Catalog]を確認した際に表示されるVolume nameになります。
+.  フォームにOS typeの選択肢を入力します。Multiple Choiceの入力は、値を入力してエンターを押すことで複数登録することができます。また、ここで指定している値は、OpenShiftコンソールで[Virtualization]-[Catalog]を確認した際に表示されるVolume nameになります。ここでは *fedora* *rhel9* *rhel10* を選択肢とします。
+
 +
 |===
 | Parameter         | Value
@@ -248,6 +249,8 @@ image::module-06-virt-automation/04-create_survey_09.png[title="3 Survey Templat
 [[run_template]]
 == Ansible Automation Platform を使用した ジョブテンプレートの実行
 
+ジョブテンプレートを実行することで、仮想マシンを作成します。
+
 . ジョブテンプレートを作成したら、右上の *Launch template(テンプレートの起動)* ボタンを選択してジョブを実行します。
 +
 image::module-06-virt-automation/05-run_template_01.png[title="Run Template", link=self, window=blank, width=100%]
@@ -268,12 +271,13 @@ image::module-06-virt-automation/05-run_template_04.png[title="Finish Template",
 image::module-06-virt-automation/05-run_template_05.png[title="Success Template", link=self, window=blank, width=100%]
 +
 
-. OpenShiftコンソールに戻り、仮想マシンが作成されているか確認します。テンプレートの実行後、指定したOpenShiftプロジェクト内に、該当のVMが作成されたことを確認できます。
+. *成功* と表示されたら、OpenShiftコンソールに戻り、仮想マシンが作成されているか確認します。テンプレートの実行後、指定したOpenShiftプロジェクト内に、該当のVMが作成されていることを確認できます。
 +
 image::module-06-virt-automation/06-result_01.png[title="deployed VM", link=self, window=blank, width=100%]
 +
 image::module-06-virt-automation/06-result_02.png[title="deployed VM", link=self, window=blank, width=100%]
 
+変数を変えて、いくつか仮想マシンを起動してみてください。
 
 == まとめ
 
